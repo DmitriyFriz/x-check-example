@@ -40,12 +40,18 @@
   "taskScore": {
     "task": "simple-task-v1",
     "items": {
-      "basic_p1": { "score": 20, "comment": "Well done!" },
+      "basic_p1": {
+        "score": 20,
+        "comment": "Well done!"
+      },
       "extra_p1": {
         "score": 15,
         "comment": "Some things are done, some are not"
       },
-      "fines_p1": { "score": 0, "comment": "No ticket today" }
+      "fines_p1": {
+        "score": 0,
+        "comment": "No ticket today"
+      }
     }
   },
   "crossCheckSession": {
@@ -60,9 +66,18 @@
     "minReiewsAmount": 1,
     "desiredReviewersAmount": 2,
     "attendees": [
-      { "githubId": "ButterBrot777", "reviewerOf": ["torvalds", "cardamo"] },
-      { "githubId": "torvalds", "reviewerOf": ["cardamo"] },
-      { "githubId": "cardamo", "reviewerOf": ["ButterBrot777"] }
+      {
+        "githubId": "ButterBrot777",
+        "reviewerOf": ["torvalds", "cardamo"]
+      },
+      {
+        "githubId": "torvalds",
+        "reviewerOf": ["cardamo"]
+      },
+      {
+        "githubId": "cardamo",
+        "reviewerOf": ["ButterBrot777"]
+      }
     ]
   },
   "reviewRequest": {

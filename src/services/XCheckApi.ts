@@ -1,11 +1,11 @@
 type Roles = 'author' | 'student' | 'supervisor' | 'course_manager';
 
-type TScopeCategory = 'Basic Scope' | 'Extra Scope' | 'Fines';
-
 type TSignInProps = {
   githubId: string;
   role: Roles;
 };
+
+type TScopeCategory = 'Basic Scope' | 'Extra Scope' | 'Fines';
 
 type TTask = {
   id: string;
@@ -29,10 +29,8 @@ type TCreateOptionsProps<T> = {
   data?: T;
 };
 
-type TCreatePostRequestProps<T> = {
-  method: TRequestMethod;
+type TCreatePostRequestProps<T> = TCreateOptionsProps<T> & {
   path: string;
-  data?: T;
 };
 
 class XCheckApiService {
@@ -73,8 +71,16 @@ class XCheckApiService {
   signIn = async (data: TSignInProps) =>
     this.createRequest({ method: 'POST', path: '/user', data });
 
+  getTasks = async () => this.createRequest({ method: 'GET', path: '/tasks' });
+
   createTask = async (data: TTask) =>
     this.createRequest({ method: 'POST', path: '/tasks', data });
+
+  updateTask = async (id: string, data: TTask) =>
+    this.createRequest({ method: 'PUT', path: `/tasks/${id}`, data });
+
+  deleteTask = async (id: string) =>
+    this.createRequest({ method: 'DELETE', path: `/tasks/${id}` });
 }
 
 export default XCheckApiService;
