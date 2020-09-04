@@ -1,14 +1,23 @@
 {
   "user": {
     "githubId": "torvalds",
-    "roles": ["author", "student", "supervisor", "course_manager"]
+    "roles": [
+      "author",
+      "student",
+      "supervisor",
+      "course_manager"
+    ]
   },
   "tasks": [
     {
       "id": "simple-task-v1",
       "author": "cardamo",
       "state": "DRAFT",
-      "categoriesOrder": ["Basic Scope", "Extra Scope", "Fines"],
+      "categoriesOrder": [
+        "Basic Scope",
+        "Extra Scope",
+        "Fines"
+      ],
       "items": [
         {
           "id": "basic_p1",
@@ -37,64 +46,76 @@
       ]
     }
   ],
-  "taskScore": {
-    "task": "simple-task-v1",
-    "items": {
-      "basic_p1": {
-        "score": 20,
-        "comment": "Well done!"
-      },
-      "extra_p1": {
-        "score": 15,
-        "comment": "Some things are done, some are not"
-      },
-      "fines_p1": {
-        "score": 0,
-        "comment": "No ticket today"
+  "cross-check-sessions": [
+    {
+      "id": "rss2020Q3react-xcheck",
+      "state": "DRAFT",
+      "taskId": "simple-task-v1",
+      "coefficient": 0.7,
+      "startDate": "2020-07-07",
+      "endDate": "2020-07-14",
+      "discardMinScore": true,
+      "discardMaxScore": false,
+      "minReiewsAmount": 1,
+      "desiredReviewersAmount": 2,
+      "attendees": [
+        {
+          "githubId": "ButterBrot777",
+          "reviewerOf": [
+            "torvalds",
+            "cardamo"
+          ]
+        },
+        {
+          "githubId": "torvalds",
+          "reviewerOf": [
+            "cardamo"
+          ]
+        },
+        {
+          "githubId": "cardamo",
+          "reviewerOf": [
+            "ButterBrot777"
+          ]
+        }
+      ]
+    }
+  ],
+  "review-requests": [
+    {
+      "id": "rev-req-1",
+      "crossCheckSessionId": "rss2020Q3react-xcheck",
+      "author": "cardamo",
+      "task": "simple-task-v1",
+      "state": "PUBLISHED",
+      "selfGrade": {
+        "task": "simple-task-v1",
+        "items": {
+          "basic_p1": {
+            "score": 20,
+            "comment": "Well done!"
+          },
+          "extra_p1": {
+            "score": 15,
+            "comment": "Some things are done, some are not"
+          },
+          "fines_p1": {
+            "score": 0,
+            "comment": "No ticket today"
+          }
+        }
       }
     }
-  },
-  "crossCheckSession": {
-    "id": "rss2020Q3react-xcheck",
-    "state": "DRAFT",
-    "taskId": "simple-task-v1",
-    "coefficient": 0.7,
-    "startDate": "2020-07-07",
-    "endDate": "2020-07-14",
-    "discardMinScore": true,
-    "discardMaxScore": false,
-    "minReiewsAmount": 1,
-    "desiredReviewersAmount": 2,
-    "attendees": [
-      {
-        "githubId": "ButterBrot777",
-        "reviewerOf": ["torvalds", "cardamo"]
-      },
-      {
-        "githubId": "torvalds",
-        "reviewerOf": ["cardamo"]
-      },
-      {
-        "githubId": "cardamo",
-        "reviewerOf": ["ButterBrot777"]
-      }
-    ]
-  },
-  "reviewRequest": {
-    "id": "rev-req-1",
-    "crossCheckSessionId": "rss2020Q3react-xcheck",
-    "author": "cardamo",
-    "task": "simple-task-v1",
-    "state": "PUBLISHED",
-    "selfGrade": {}
-  },
-  "review": {
-    "id": "rev-id-1",
-    "requestId": "rev-req-1",
-    "author": "ButterBrot777",
-    "state": "DISPUTED",
-    "grade": {}
-  },
+  ],
+  "reviews": [
+    {
+      "id": "rev-id-1",
+      "requestId": "rev-req-1",
+      "author": "ButterBrot777",
+      "state": "DISPUTED",
+      "grade": {}
+    }
+  ],
   "dispute": {
     "reviewId": "rev-id-1",
     "state": "ONGOING",

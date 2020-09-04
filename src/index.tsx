@@ -6,7 +6,6 @@ import { store, history } from './store';
 import './index.css';
 import App from './app/App';
 import * as serviceWorker from './serviceWorker';
-import Api from './services/XCheckApi';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,56 +17,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-const api = new Api();
-
-// api.signIn({
-//   githubId: 'jack',
-//   role: 'author',
-// });
-
-// api.createTask({
-//   id: 'TEST-task-v1111111111',
-//   author: 'cardamo',
-//   state: 'DRAFT',
-//   categoriesOrder: ['Basic Scope', 'Extra Scope', 'Fines'],
-//   items: [
-//     {
-//       id: 'basic_p1',
-//       minScore: 0,
-//       maxScore: 20,
-//       category: 'Basic Scope',
-//       title: 'Basic things',
-//       description: 'You need to make things right, not wrong',
-//     },
-//   ],
-// });
-
-// api.createTask({
-//   id: 'TEST-task-v22222222222',
-//   author: 'JACK',
-//   state: 'DRAFT',
-//   categoriesOrder: ['Basic Scope', 'Extra Scope', 'Fines'],
-//   items: [
-//     {
-//       id: 'basic_p1',
-//       minScore: 0,
-//       maxScore: 20,
-//       category: 'Basic Scope',
-//       title: 'Basic things',
-//       description: 'You need to make things right, not wrong',
-//     },
-//   ],
-// });
-
-// api.deleteTask('TEST-task-v22222222222');
-
-// api.tasks.get();
-// api.getTaskById('simple-task-v2');
-
-// api.updateTask('simple-task-v2', {
-//   author: 'JACK!!!!!!!!!',
-// });
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

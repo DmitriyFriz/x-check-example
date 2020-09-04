@@ -31,6 +31,7 @@ describe('Requests', () => {
 
   it('should return data', async () => {
     const response = await api.tasks.get();
+
     expect(fetchArgs.options.method).toBe('GET');
     expect(response).toBe(tasksData);
   });
@@ -38,6 +39,7 @@ describe('Requests', () => {
   it('should send request with id', async () => {
     const id = 'some-task-v2';
     await api.tasks.getById('some-task-v2');
+
     expect(fetchArgs.options.method).toBe('GET');
     expect(fetchArgs.url).toContain(`/tasks?id=${id}`);
   });
@@ -48,6 +50,7 @@ describe('Requests', () => {
       author: 'Frodo',
     };
     await api.tasks.create(data);
+
     expect(fetchArgs.options.method).toBe('POST');
     expect(fetchArgs.options.body).toBe(JSON.stringify(data));
   });
