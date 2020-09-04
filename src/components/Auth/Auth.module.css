@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+.login-form {
+    max-width: 300px;
+}
+
