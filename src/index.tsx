@@ -44,7 +44,7 @@ const api = new Api();
 // });
 
 // api.createTask({
-//   id: 'TEST-task-v2',
+//   id: 'TEST-task-v22222222222',
 //   author: 'JACK',
 //   state: 'DRAFT',
 //   categoriesOrder: ['Basic Scope', 'Extra Scope', 'Fines'],
@@ -60,25 +60,13 @@ const api = new Api();
 //   ],
 // });
 
-api.deleteTask('TEST-task-v2');
+// api.deleteTask('TEST-task-v22222222222');
 
-api.getTasks();
+// api.tasks.get();
+// api.getTaskById('simple-task-v2');
 
-// api.updateTask('TEST-task-v2', {
-//   id: 'TEST-task-v1111111111',
+// api.updateTask('simple-task-v2', {
 //   author: 'JACK!!!!!!!!!',
-//   state: 'DRAFT',
-//   categoriesOrder: ['Basic Scope', 'Extra Scope', 'Fines'],
-//   items: [
-//     {
-//       id: 'basic_p1',
-//       minScore: 0,
-//       maxScore: 2000000000,
-//       category: 'Basic Scope',
-//       title: 'Basic things',
-//       description: 'You need to make things right, not wrong',
-//     },
-//   ],
 // });
 
 // If you want your app to work offline and load faster, you can change
