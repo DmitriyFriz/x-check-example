@@ -90,7 +90,6 @@ class XCheckApiService {
     const options = this.createOptions({ method, data });
     const request = await fetch(`${this.root}${path}`, options);
     const response = await request.json();
-    console.log(response);
 
     return response;
   };
