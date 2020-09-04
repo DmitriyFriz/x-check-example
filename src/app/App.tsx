@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import s from './App.module.css';
