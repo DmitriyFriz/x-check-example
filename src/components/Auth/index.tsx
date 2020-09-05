@@ -1,15 +1,17 @@
 import React from 'react';
-// Ant Design
-import { Form, Input, Button, Select } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 // Redux
 import { useDispatch } from 'react-redux';
-import { Field, reduxForm, InjectedFormProps } from 'redux-form';
-import { actions, types } from '../../reducers/user';
+import {
+  Field,
+  reduxForm,
+  InjectedFormProps,
+  FormSubmitHandler,
+} from 'redux-form';
+import { types, operations } from '../../reducers/user';
 // Styles
 import s from './Auth.module.css';
 
-const AuthForm: React.FC<InjectedFormProps> = (props) => {
+const AuthForm: React.FC<InjectedFormProps<types.TUserData>> = (props) => {
   const { handleSubmit } = props;
 
   return (
@@ -35,14 +37,14 @@ const AuthForm: React.FC<InjectedFormProps> = (props) => {
   );
 };
 
-const ReduxForm = reduxForm({
+const ReduxForm = reduxForm<types.TUserData>({
   form: 'auth',
 })(AuthForm);
 
 const Auth: React.FC = () => {
   const dispatch = useDispatch();
-  const onSubmit = (formData: any) => {
-    console.log(formData);
+  const onSubmit: FormSubmitHandler<types.TUserData> = (formData) => {
+    dispatch(operations.signIn(formData));
   };
 
   return (
