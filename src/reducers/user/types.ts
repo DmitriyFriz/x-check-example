@@ -1,8 +1,10 @@
 export const SIGN_IN = 'SIGN_IN';
 
+export type TRole = 'author' | 'student' | null;
+
 export type TUserData = {
   githubId: string | null;
-  role: 'author' | 'student' | null;
+  role: TRole;
 };
 
 export type TSignIn = {

@@ -15,13 +15,10 @@ export const createRootReducer = (history: History) =>
     // ... other reducers
   });
 
-export type TAppStateType = ReturnType<typeof createRootReducer>;
+export type TAppStateType = ReturnType<ReturnType<typeof createRootReducer>>;
 
 export type TThunk<Action, Args = {}> = (
   args: Args
-) => (
-  dispatch: Dispatch<Action>,
-  getState: () => TAppStateType
-) => void;
+) => (dispatch: Dispatch<Action>, getState: () => TAppStateType) => void;
 
 export default createRootReducer;

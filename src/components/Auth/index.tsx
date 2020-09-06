@@ -1,41 +1,12 @@
+// React / Redux
 import React from 'react';
-// Redux
 import { useDispatch } from 'react-redux';
-import {
-  Field,
-  reduxForm,
-  InjectedFormProps,
-  FormSubmitHandler,
-} from 'redux-form';
+import { reduxForm, FormSubmitHandler } from 'redux-form';
 import { types, operations } from '../../reducers/user';
+// components
+import AuthForm from './AuthForm';
 // Styles
 import s from './Auth.module.css';
-
-const AuthForm: React.FC<InjectedFormProps<types.TUserData>> = (props) => {
-  const { handleSubmit } = props;
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Field
-          name="githubId"
-          component="input"
-          type="text"
-          placeholder="github id"
-        />
-      </div>
-      <div>
-        <Field name="role" component="select">
-          <option value="author">Author</option>
-          <option value="student">Student</option>
-        </Field>
-      </div>
-      <div>
-        <button type="submit">Sign In</button>
-      </div>
-    </form>
-  );
-};
 
 const ReduxForm = reduxForm<types.TUserData>({
   form: 'auth',
