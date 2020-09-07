@@ -1,6 +1,6 @@
 import * as types from './types';
 
-const initialState: types.TUserData = {
+const initialState: types.TState = {
   githubId: null,
   role: 'author',
   status: 'unauthorized',
@@ -13,8 +13,8 @@ const reducer = (state = initialState, action: types.TAction): TState => {
     case types.SIGN_IN:
       return {
         ...state,
-        githubId: action.payload.githubId,
-        role: action.payload.role,
+        ...action.payload,
+        status: 'authorized',
       };
 
     default:

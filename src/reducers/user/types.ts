@@ -7,12 +7,15 @@ export type TStatus = 'unauthorized' | 'authorized' | null;
 export type TUserData = {
   githubId: string | null;
   role: TRole;
-  status: TStatus;
 };
 
 export type TSignIn = {
   type: typeof SIGN_IN;
   payload: TUserData;
+};
+
+export type TState = TUserData & {
+  status: TStatus;
 };
 
 export type TAction = TSignIn;
