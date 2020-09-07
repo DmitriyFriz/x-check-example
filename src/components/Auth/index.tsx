@@ -18,7 +18,7 @@ const Auth: React.FC = () => {
 
   return (
     <div className={s.container}>
-      <h1>Authorization </h1>
+      <h1>Authorization</h1>
       <AuthForm data={userData} onSubmit={handleSubmit} />
     </div>
   );
