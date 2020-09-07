@@ -17,6 +17,13 @@ const reducer = (state = initialState, action: types.TAction): TState => {
         status: 'authorized',
       };
 
+    case types.LOG_OUT:
+      return {
+        ...state,
+        githubId: null,
+        status: 'unauthorized',
+      };
+
     default:
       return state;
   }

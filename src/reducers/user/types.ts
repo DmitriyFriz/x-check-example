@@ -1,4 +1,5 @@
 export const SIGN_IN = 'SIGN_IN';
+export const LOG_OUT = 'LOG_OUT';
 
 export type TRole = 'author' | 'student' | null;
 
@@ -14,8 +15,12 @@ export type TSignIn = {
   payload: TUserData;
 };
 
+export type TLogOut = {
+  type: typeof LOG_OUT;
+};
+
 export type TState = TUserData & {
   status: TStatus;
 };
 
-export type TAction = TSignIn;
+export type TAction = TSignIn | TLogOut;
