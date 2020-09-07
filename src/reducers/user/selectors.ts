@@ -1,3 +1,4 @@
 import { TAppStateType } from '..';
 
-export const getUserId = (state: TAppStateType) => state.user.githubId;
+export const getUserData = (state: TAppStateType) => state.user;
+export const getStatus = (state: TAppStateType) => state.user.status;

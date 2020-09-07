@@ -1,6 +1,7 @@
 export const requiredField = <T>(value: T) => {
-  if (value) {
-    return undefined;
+  let error = '';
+  if (!value) {
+    error = 'Field is required!';
   }
-  return 'Field is required!';
+  return error;
 };

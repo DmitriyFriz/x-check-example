@@ -2,7 +2,8 @@ import * as types from './types';
 
 const initialState: types.TUserData = {
   githubId: null,
-  role: null,
+  role: 'author',
+  status: 'unauthorized',
 };
 
 type TState = typeof initialState;
