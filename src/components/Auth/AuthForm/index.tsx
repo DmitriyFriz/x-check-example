@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
+import { Formik, Form, Field } from 'formik';
 // Ant Design
-import { Button, Form } from 'antd';
+import { Button, Form as FormAnt } from 'antd';
+import { Select, Input } from 'formik-antd';
 // Redux
-import { Field, InjectedFormProps } from 'redux-form';
 import { types } from '../../../reducers/user';
 // Common
 import FieldWithAlert from '../../common/FieldWithAlert';
@@ -11,49 +12,40 @@ import { requiredField } from '../../../utils/validators';
 
 const roles: Array<types.TRole> = ['author', 'student'];
 
-const AuthForm: React.FC<InjectedFormProps<types.TUserData>> = (props) => {
-  const { handleSubmit, change } = props;
-
-  useEffect(() => change('role', 'author'), []);
-
+const AuthForm: React.FC = (props) => {
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Form.Item name="githubId" label="GitHub Id">
-          <Field
+    <Formik
+      initialValues={{
+        githubId: '',
+        role: 'author',
+      }}
+      onSubmit={(value) => console.log(value)}
+    >
+      <Form>
+        <FormAnt.Item label="GitHub Id" htmlFor="githubId">
+          <Input
+            id="githubId"
             name="githubId"
-            component={FieldWithAlert}
             type="text"
-            label="GitHub Id"
             placeholder="github id"
-            validate={[requiredField]}
           />
-        </Form.Item>
-      </div>
+        </FormAnt.Item>
 
-      <div>
-        <Form.Item label="Select role">
-          {roles.map((role) => (
-            <label key={role} htmlFor={role as string}>
-              <Field
-                name="role"
-                value={role as string}
-                component="input"
-                type="radio"
-                id={role as string}
-              />
-              {role}
-            </label>
-          ))}
-        </Form.Item>
-      </div>
+        <FormAnt.Item label="Select role" htmlFor="role">
+          <Select id="role" name="role" defaultValue={roles[0]}>
+            {roles.map((role) => (
+              <Select.Option key={role as string} value={role as string}>
+                {role}
+              </Select.Option>
+            ))}
+          </Select>
+        </FormAnt.Item>
 
-      <div>
         <Button type="primary" htmlType="submit">
           Sign In
         </Button>
-      </div>
-    </form>
+      </Form>
+    </Formik>
   );
 };
 

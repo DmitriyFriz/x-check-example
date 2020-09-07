@@ -16,6 +16,8 @@
     "@types/redux-form": "^8.3.0",
     "antd": "^4.6.2",
     "connected-react-router": "^6.8.0",
+    "formik": "^2.1.5",
+    "formik-antd": "^2.0.1",
     "history": "^5.0.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",

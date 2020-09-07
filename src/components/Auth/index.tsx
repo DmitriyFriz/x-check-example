@@ -8,10 +8,6 @@ import AuthForm from './AuthForm';
 // Styles
 import s from './Auth.module.css';
 
-const ReduxForm = reduxForm<types.TUserData>({
-  form: 'auth',
-})(AuthForm);
-
 const Auth: React.FC = () => {
   const dispatch = useDispatch();
   const onSubmit: FormSubmitHandler<types.TUserData> = (formData) => {
@@ -21,7 +17,7 @@ const Auth: React.FC = () => {
   return (
     <div className={s.container}>
       <h1>Authorization </h1>
-      <ReduxForm onSubmit={onSubmit} />
+      <AuthForm  />
     </div>
   );
 };
