@@ -58,7 +58,34 @@ describe('Cross-check-session reducer', () => {
     });
 
     it('should create new session', () => {
-      expect(newState.sessions.find((session) => session?.id === 'rss2020Q3react')).toEqual(newSession);
+      expect(
+        newState.sessions.find((session) => session?.id === 'rss2020Q3react')
+      ).toEqual(newSession);
+    });
+  });
+
+  describe('updateSession action:', () => {
+    const state: types.TState = {
+      ...initState,
+      sessions: data,
+    };
+    const inputData: types.TUpdatedData = {
+      id: 'rss2020Q3Angular',
+      state: 'COMPLETED',
+      coefficient: 0.8,
+      minReviewsAmount: 3,
+    };
+    const action = actions.updateSession(inputData);
+    const newState = reducer(state, action);
+    const indexOfUpdatedSession = newState.sessions.findIndex(
+      (session) => session?.id === 'rss2020Q3Angular'
+    );
+
+    it('session should be updated', () => {
+      expect(newState.sessions[indexOfUpdatedSession]).toEqual({
+        ...state.sessions[indexOfUpdatedSession],
+        ...inputData,
+      });
     });
   });
 });

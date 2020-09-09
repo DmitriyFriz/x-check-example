@@ -1,4 +1,5 @@
 import * as types from './types';
+import { updateSession } from './utils';
 
 const initialState: types.TState = {
   selected: null,
@@ -19,6 +20,12 @@ const reducer = (state = initialState, action: types.TAction): TState => {
       return {
         ...state,
         sessions: [...state.sessions, action.payload.data],
+      };
+
+    case types.UPDATE_SESSION:
+      return {
+        ...state,
+        sessions: updateSession(action.payload.data, state.sessions),
       };
 
     default:

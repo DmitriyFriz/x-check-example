@@ -15,3 +15,10 @@ export const createSession = (data: types.TSessionData): types.TAction => ({
     data,
   },
 });
+
+export const updateSession = (data: types.TUpdatedData): types.TAction => ({
+  type: types.UPDATE_SESSION,
+  payload: {
+    data
+  },
+});

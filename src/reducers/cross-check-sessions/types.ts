@@ -45,9 +45,24 @@ export type TCreateSession = {
   };
 };
 
+type Partial<T> = {
+  [K in keyof T]?: T[K];
+};
+
+export type TUpdatedData = Partial<TSessionData> & {
+  id: string;
+};
+
+export type TUpdateSession = {
+  type: typeof UPDATE_SESSION;
+  payload: {
+    data: TUpdatedData;
+  };
+};
+
 export type TState = {
-  sessions: Array<TSessionData | null> ;
+  sessions: Array<TSessionData>;
   selected: string | null;
 };
 
-export type TAction = TSetSessionsData | TCreateSession;
+export type TAction = TSetSessionsData | TCreateSession | TUpdateSession;
