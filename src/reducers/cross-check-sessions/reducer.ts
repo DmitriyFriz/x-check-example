@@ -28,6 +28,14 @@ const reducer = (state = initialState, action: types.TAction): TState => {
         sessions: updateSession(action.payload.data, state.sessions),
       };
 
+    case types.DELETE_SESSION:
+      return {
+        ...state,
+        sessions: state.sessions.filter(
+          (session) => session.id !== action.payload.id
+        ),
+      };
+
     default:
       return state;
   }

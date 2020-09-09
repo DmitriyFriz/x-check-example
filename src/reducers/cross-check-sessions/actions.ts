@@ -22,3 +22,10 @@ export const updateSession = (data: types.TUpdatedData): types.TAction => ({
     data
   },
 });
+
+export const deleteSession = (id: string): types.TAction => ({
+  type: types.DELETE_SESSION,
+  payload: {
+    id
+  },
+});

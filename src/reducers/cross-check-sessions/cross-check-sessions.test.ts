@@ -1,4 +1,5 @@
 import reducer, { types, actions } from '.';
+import { getSessionIndex } from './utils';
 
 const initState: types.TState = {
   sessions: [],
@@ -35,7 +36,8 @@ const data: Array<types.TSessionData> = [
 describe('Cross-check-session reducer', () => {
   describe('setSessionsData action:', () => {
     const action = actions.setSessionsData(data);
-    const newState = reducer(initState, action);
+    const state = initState;
+    const newState = reducer(state, action);
 
     it('should set data', () => {
       expect(newState.sessions).toEqual(data);
@@ -65,10 +67,6 @@ describe('Cross-check-session reducer', () => {
   });
 
   describe('updateSession action:', () => {
-    const state: types.TState = {
-      ...initState,
-      sessions: data,
-    };
     const inputData: types.TUpdatedData = {
       id: 'rss2020Q3Angular',
       state: 'COMPLETED',
@@ -76,16 +74,34 @@ describe('Cross-check-session reducer', () => {
       minReviewsAmount: 3,
     };
     const action = actions.updateSession(inputData);
+    const state = { ...initState, sessions: data };
     const newState = reducer(state, action);
-    const indexOfUpdatedSession = newState.sessions.findIndex(
-      (session) => session?.id === 'rss2020Q3Angular'
-    );
 
     it('session should be updated', () => {
+      const indexOfUpdatedSession = getSessionIndex(
+        'rss2020Q3Angular',
+        newState.sessions
+      );
+
       expect(newState.sessions[indexOfUpdatedSession]).toEqual({
         ...state.sessions[indexOfUpdatedSession],
         ...inputData,
       });
+    });
+  });
+
+  describe('deleteSession action:', () => {
+    const id = 'rss2020Q3Angular';
+    const action = actions.deleteSession(id);
+    const state = { ...initState, sessions: data };
+    const newState = reducer(state, action);
+    const index = getSessionIndex(id, newState.sessions);
+
+    it('session should be removed by id', () => {
+      expect(index).toBe(-1);
+      expect(newState.sessions).toEqual(
+        data.filter((session) => session.id !== id)
+      );
     });
   });
 });

@@ -60,9 +60,20 @@ export type TUpdateSession = {
   };
 };
 
+export type TDeleteSession = {
+  type: typeof DELETE_SESSION;
+  payload: {
+    id: string;
+  };
+};
+
 export type TState = {
   sessions: Array<TSessionData>;
   selected: string | null;
 };
 
-export type TAction = TSetSessionsData | TCreateSession | TUpdateSession;
+export type TAction =
+  | TSetSessionsData
+  | TCreateSession
+  | TUpdateSession
+  | TDeleteSession;
