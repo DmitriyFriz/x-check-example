@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 // Components
 import Auth from '../components/Auth';
+import Requests from '../components/Requests';
 // Selectors
 import { selectors } from '../reducers/user';
 // Style
@@ -26,7 +27,8 @@ const App: React.FC = () => {
     <div className={s.App}>
       <Switch>
         <Route exact path="/" component={Auth} />
-        <Route path="/home" render={() => <h1>Welcome</h1>} />
+        {/* <Route path="/home" render={() => <h1>Welcome</h1>} /> */}
+        <Route path="/home" component={Requests} />
         <Route path="*" render={() => <h1>PAGE NOT FOUND</h1>} />
       </Switch>
     </div>
