@@ -74,6 +74,13 @@ export type TDeleteSession = {
   };
 };
 
+export type TOpenRequestGathering = {
+  type: typeof OPEN_REQUESTS_GATHERING;
+  payload: {
+    id: string;
+  };
+};
+
 export type TState = {
   sessions: Array<TSessionData>;
   selected: string | null;
@@ -84,4 +91,5 @@ export type TAction =
   | TCreateSession
   | TUpdateSession
   | TDeleteSession
-  | TSelectSession;
+  | TSelectSession
+  | TOpenRequestGathering;

@@ -42,6 +42,18 @@ const reducer = (state = initialState, action: types.TAction): TState => {
         ),
       };
 
+    case types.OPEN_REQUESTS_GATHERING:
+      return {
+        ...state,
+        sessions: updateSession(
+          {
+            id: action.payload.id,
+            state: 'REQUESTS_GATHERING',
+          },
+          state.sessions
+        ),
+      };
+
     default:
       return state;
   }

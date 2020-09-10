@@ -97,4 +97,18 @@ describe('Cross-check-session reducer', () => {
       data.filter((session) => session.id !== id)
     );
   });
+
+  it('openRequestGathering action should change session state to "REQUEST_GATHERING"', () => {
+    const id = 'rss2020Q3react';
+    const action = actions.openRequestGathering(id);
+    const state = { ...initState, sessions: data };
+    const newState = reducer(state, action);
+    const index = getSessionIndex(id, newState.sessions);
+
+    expect(newState.sessions[index].state).toBe('REQUESTS_GATHERING');
+    expect(newState.sessions[index]).toEqual({
+      ...data[index],
+      state: 'REQUESTS_GATHERING',
+    });
+  });
 });

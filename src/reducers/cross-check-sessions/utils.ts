@@ -7,7 +7,7 @@ export const updateSession = (
   inputData: types.TUpdatedData,
   sessionData: Array<types.TSessionData>
 ) => {
-  const updatedData = sessionData;
+  const updatedData = [...sessionData];
   const index = getSessionIndex(inputData.id, updatedData);
   updatedData[index] = { ...updatedData[index], ...inputData };
 

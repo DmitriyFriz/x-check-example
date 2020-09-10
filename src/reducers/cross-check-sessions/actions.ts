@@ -36,3 +36,10 @@ export const selectSession = (id: string): types.TAction => ({
     id
   },
 });
+
+export const openRequestGathering = (id: string): types.TAction => ({
+  type: types.OPEN_REQUESTS_GATHERING,
+  payload: {
+    id
+  },
+});
