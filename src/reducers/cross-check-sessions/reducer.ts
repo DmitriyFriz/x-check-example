@@ -16,6 +16,12 @@ const reducer = (state = initialState, action: types.TAction): TState => {
         sessions: action.payload.data,
       };
 
+    case types.SELECT_SESSION:
+      return {
+        ...state,
+        selected: action.payload.id,
+      };
+
     case types.CREATE_SESSION:
       return {
         ...state,

@@ -29,3 +29,10 @@ export const deleteSession = (id: string): types.TAction => ({
     id
   },
 });
+
+export const selectSession = (id: string): types.TAction => ({
+  type: types.SELECT_SESSION,
+  payload: {
+    id
+  },
+});

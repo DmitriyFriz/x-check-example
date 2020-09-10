@@ -34,39 +34,37 @@ const data: Array<types.TSessionData> = [
 ];
 
 describe('Cross-check-session reducer', () => {
-  describe('setSessionsData action:', () => {
+  it('setSessionsData action should set a data', () => {
     const action = actions.setSessionsData(data);
     const state = initState;
     const newState = reducer(state, action);
 
-    it('should set data', () => {
-      expect(newState.sessions).toEqual(data);
-    });
-
-    it('should not change select value', () => {
-      expect(newState.selected).toBe(initState.selected);
-    });
+    expect(newState.sessions).toEqual(data);
+    expect(newState.selected).toBe(initState.selected);
   });
 
-  describe('createSession action:', () => {
+  it('selectSession action should add id session to "selected" key', () => {
+    const id = 'rss2020Q3react';
+    const action = actions.selectSession(id);
+    const state = initState;
+    const newState = reducer(state, action);
+
+    expect(newState.selected).not.toBeNull();
+    expect(newState.selected).toBe(id);
+  });
+
+  it('createSession action should add a new session to sessions data', () => {
     const newSession = data[0];
     const action = actions.createSession(newSession);
     const newState = reducer(initState, action);
 
-    it('should add new session to sessions data', () => {
-      expect(newState.sessions.length).toBeGreaterThan(
-        initState.sessions.length
-      );
-    });
-
-    it('should create new session', () => {
-      expect(
-        newState.sessions.find((session) => session?.id === 'rss2020Q3react')
-      ).toEqual(newSession);
-    });
+    expect(newState.sessions.length).toBeGreaterThan(initState.sessions.length);
+    expect(
+      newState.sessions.find((session) => session?.id === 'rss2020Q3react')
+    ).toEqual(newSession);
   });
 
-  describe('updateSession action:', () => {
+  it('updateSession action should update a session data by id', () => {
     const inputData: types.TUpdatedData = {
       id: 'rss2020Q3Angular',
       state: 'COMPLETED',
@@ -76,32 +74,27 @@ describe('Cross-check-session reducer', () => {
     const action = actions.updateSession(inputData);
     const state = { ...initState, sessions: data };
     const newState = reducer(state, action);
+    const indexOfUpdatedSession = getSessionIndex(
+      'rss2020Q3Angular',
+      newState.sessions
+    );
 
-    it('session should be updated', () => {
-      const indexOfUpdatedSession = getSessionIndex(
-        'rss2020Q3Angular',
-        newState.sessions
-      );
-
-      expect(newState.sessions[indexOfUpdatedSession]).toEqual({
-        ...state.sessions[indexOfUpdatedSession],
-        ...inputData,
-      });
+    expect(newState.sessions[indexOfUpdatedSession]).toEqual({
+      ...state.sessions[indexOfUpdatedSession],
+      ...inputData,
     });
   });
 
-  describe('deleteSession action:', () => {
+  it('deleteSession action should remove a session by id', () => {
     const id = 'rss2020Q3Angular';
     const action = actions.deleteSession(id);
     const state = { ...initState, sessions: data };
     const newState = reducer(state, action);
     const index = getSessionIndex(id, newState.sessions);
 
-    it('session should be removed by id', () => {
-      expect(index).toBe(-1);
-      expect(newState.sessions).toEqual(
-        data.filter((session) => session.id !== id)
-      );
-    });
+    expect(index).toBe(-1);
+    expect(newState.sessions).toEqual(
+      data.filter((session) => session.id !== id)
+    );
   });
 });

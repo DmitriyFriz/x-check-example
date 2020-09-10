@@ -38,6 +38,13 @@ export type TSetSessionsData = {
   };
 };
 
+export type TSelectSession = {
+  type: typeof SELECT_SESSION;
+  payload: {
+    id: string;
+  };
+};
+
 export type TCreateSession = {
   type: typeof CREATE_SESSION;
   payload: {
@@ -76,4 +83,5 @@ export type TAction =
   | TSetSessionsData
   | TCreateSession
   | TUpdateSession
-  | TDeleteSession;
+  | TDeleteSession
+  | TSelectSession;
