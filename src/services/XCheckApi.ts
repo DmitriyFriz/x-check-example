@@ -56,6 +56,9 @@ class XCheckApiService {
     getById: (id: string) =>
       this.createRequest({ method: 'GET', path: `/${url}?id=${id}` }),
 
+    getByFilter: (filter: string) =>
+      this.createRequest({ method: 'GET', path: `/${url}?${filter}` }),
+
     create: <T>(data: T) =>
       this.createRequest({ method: 'POST', path: `/${url}`, data }),
 

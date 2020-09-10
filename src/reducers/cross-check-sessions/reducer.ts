@@ -54,6 +54,18 @@ const reducer = (state = initialState, action: types.TAction): TState => {
         ),
       };
 
+    case types.CLOSE_REQUESTS_GATHERING:
+      return {
+        ...state,
+        sessions: updateSession(
+          {
+            id: action.payload.id,
+            state: 'CROSS_CHECK',
+          },
+          state.sessions
+        ),
+      };
+
     default:
       return state;
   }

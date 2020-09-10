@@ -1,5 +1,9 @@
 import reducer, { types, actions } from '.';
-import { getSessionIndex } from './utils';
+import {
+  getSessionIndex,
+  addReviewerToAttendee,
+  createReviewerDistribution,
+} from './utils';
 
 const initState: types.TState = {
   sessions: [],
@@ -110,5 +114,49 @@ describe('Cross-check-session reducer', () => {
       ...data[index],
       state: 'REQUESTS_GATHERING',
     });
+  });
+});
+
+const list = ['jack', 'john', 'boris-britva', 'macKlein', 'rediska'];
+jest.mock('lodash.shuffle', () =>
+  jest
+    .fn()
+    .mockReturnValue(['john', 'jack', 'macKlein', 'boris-britva', 'rediska'])
+);
+
+describe('Cross-check-session utils: createReviewerDistribution', () => {
+  const reviewers = addReviewerToAttendee(list, 2)([], 'jack', 0);
+  let distribution = createReviewerDistribution(list, 1);
+
+  it('addReviewerToAttendee should add reviewers to an attendee', () => {
+    expect(reviewers).toEqual([
+      { githubId: 'jack', reviewerOf: ['john', 'boris-britva'] },
+    ]);
+  });
+
+  it('createReviewerDistribution should create reviewer distribution per 1 reviewers amount', () => {
+    expect(distribution).toEqual([
+      { githubId: 'john', reviewerOf: ['jack'] },
+      { githubId: 'jack', reviewerOf: ['macKlein'] },
+      { githubId: 'macKlein', reviewerOf: ['boris-britva'] },
+      { githubId: 'boris-britva', reviewerOf: ['rediska'] },
+      { githubId: 'rediska', reviewerOf: ['john'] },
+    ]);
+  });
+
+  it('createReviewerDistribution should create reviewer distribution per 2 reviewers amount', () => {
+    distribution = createReviewerDistribution(list, 2);
+
+    expect(distribution).toEqual([
+      { githubId: 'john', reviewerOf: ['jack', 'macKlein'] },
+      { githubId: 'jack', reviewerOf: ['macKlein', 'boris-britva'] },
+      { githubId: 'macKlein', reviewerOf: ['boris-britva', 'rediska'] },
+      { githubId: 'boris-britva', reviewerOf: ['rediska', 'john'] },
+      { githubId: 'rediska', reviewerOf: ['john', 'jack'] },
+    ]);
+  });
+
+  it('attendee amount should be equal a result length', () => {
+    expect(distribution.length).toBe(list.length);
   });
 });

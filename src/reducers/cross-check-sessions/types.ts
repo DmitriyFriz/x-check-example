@@ -13,7 +13,7 @@ type TSessionState =
   | 'CROSS_CHECK'
   | 'COMPLETED';
 
-type TAttendee = {
+export type TAttendee = {
   githubId: string;
   reviewerOf: Array<string | null>;
 };
@@ -81,6 +81,13 @@ export type TOpenRequestGathering = {
   };
 };
 
+export type TCloseRequestGathering = {
+  type: typeof CLOSE_REQUESTS_GATHERING;
+  payload: {
+    id: string;
+  };
+};
+
 export type TState = {
   sessions: Array<TSessionData>;
   selected: string | null;
@@ -92,4 +99,5 @@ export type TAction =
   | TUpdateSession
   | TDeleteSession
   | TSelectSession
-  | TOpenRequestGathering;
+  | TOpenRequestGathering
+  | TCloseRequestGathering;
