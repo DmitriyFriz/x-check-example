@@ -96,11 +96,17 @@
   ],
   "reviews": [
     {
-      "id": "rev-id-1",
-      "requestId": "rev-req-1",
-      "author": "ButterBrot777",
-      "state": "DISPUTED",
-      "grade": {}
+      "id": "rss2020Q3react-xcheck",
+      "reviews": [
+        {
+          "id": "rev-id-1",
+          "requestId": "rev-req-1",
+          "author": "ButterBrot777",
+          "state": "DISPUTED",
+          "score": 75,
+          "grade": {}
+        }
+      ]
     }
   ],
   "dispute": {
