@@ -4,12 +4,14 @@ import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
 // Reducers
 import user from './user/reducer';
+import crossCheckSession from './cross-check-sessions/reducer';
 // ... other reducers
 
 export const createRootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
     user,
+    crossCheckSession,
     // ... other reducers
   });
 

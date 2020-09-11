@@ -28,6 +28,7 @@ export type TSessionData = {
   discardMinScore: boolean;
   discardMaxScore: false;
   minReviewsAmount: number;
+  desiredReviewersAmount: number
   attendees: Array<TAttendee>;
 };
 

@@ -1,7 +1,7 @@
 import shuffle from 'lodash.shuffle';
 import * as types from './types';
 
-export const getSessionIndex = (id: string, data: Array<types.TSessionData>) =>
+export const getSessionIndex = (id: string, data: Array<{id: string}>) =>
   data.findIndex((session) => session?.id === id);
 
 export const updateSession = (
@@ -52,4 +52,12 @@ export const createReviewerDistribution = (
     addReviewerToAttendee(shuffledList, reviewersAmount),
     []
   );
+};
+
+export const getAttendeeList = (
+  requests: Array<{ author: string }>
+): Array<string> => {
+  return requests.reduce((attendeeList: Array<string>, request) => {
+    return [...attendeeList, request.author];
+  }, []);
 };

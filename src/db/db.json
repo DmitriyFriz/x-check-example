@@ -1,23 +1,10 @@
 {
-  "user": {
-    "githubId": "torvalds",
-    "roles": [
-      "author",
-      "student",
-      "supervisor",
-      "course_manager"
-    ]
-  },
   "tasks": [
     {
       "id": "simple-task-v1",
       "author": "cardamo",
       "state": "DRAFT",
-      "categoriesOrder": [
-        "Basic Scope",
-        "Extra Scope",
-        "Fines"
-      ],
+      "categoriesOrder": ["Basic Scope", "Extra Scope", "Fines"],
       "items": [
         {
           "id": "basic_p1",
@@ -61,51 +48,51 @@
       "attendees": [
         {
           "githubId": "ButterBrot777",
-          "reviewerOf": [
-            "torvalds",
-            "cardamo"
-          ]
+          "reviewerOf": ["torvalds", "cardamo"]
         },
         {
           "githubId": "torvalds",
-          "reviewerOf": [
-            "cardamo"
-          ]
+          "reviewerOf": ["cardamo"]
         },
         {
           "githubId": "cardamo",
-          "reviewerOf": [
-            "ButterBrot777"
-          ]
+          "reviewerOf": ["ButterBrot777"]
         }
       ]
     }
   ],
   "review-requests": [
-    {
-      "id": "rev-req-1",
-      "crossCheckSessionId": "rss2020Q3react-xcheck",
-      "author": "cardamo",
-      "task": "simple-task-v1",
-      "state": "PUBLISHED",
-      "selfGrade": {
-        "task": "simple-task-v1",
-        "items": {
-          "basic_p1": {
-            "score": 20,
-            "comment": "Well done!"
-          },
-          "extra_p1": {
-            "score": 15,
-            "comment": "Some things are done, some are not"
-          },
-          "fines_p1": {
-            "score": 0,
-            "comment": "No ticket today"
+    [
+      {
+        "id": "rss2020Q3react-xcheck",
+        "requests": [
+          {
+            "id": "rev-req-1",
+            "crossCheckSessionId": "rss2020Q3react-xcheck",
+            "author": "cardamo",
+            "task": "simple-task-v1",
+            "state": "PUBLISHED",
+            "selfGrade": {
+              "task": "simple-task-v1",
+              "items": {
+                "basic_p1": {
+                  "score": 20,
+                  "comment": "Well done!"
+                },
+                "extra_p1": {
+                  "score": 15,
+                  "comment": "Some things are done, some are not"
+                },
+                "fines_p1": {
+                  "score": 0,
+                  "comment": "No ticket today"
+                }
+              }
+            }
           }
-        }
+        ]
       }
-    }
+    ]
   ],
   "reviews": [
     {
