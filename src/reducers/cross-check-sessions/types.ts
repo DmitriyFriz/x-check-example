@@ -12,8 +12,14 @@ type TSessionState =
   | 'CROSS_CHECK'
   | 'COMPLETED';
 
-export type TAttendee = {
-  githubId: string;
+export type TRequest = {
+  id: string;
+  author: string;
+};
+
+export type TRemoteRequestData = { author: string; id: string };
+
+export type TAttendee = TRequest & {
   reviewerOf: Array<string | null>;
 };
 

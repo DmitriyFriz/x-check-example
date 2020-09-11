@@ -1,7 +1,7 @@
 import shuffle from 'lodash.shuffle';
 import * as types from './types';
 
-export const getSessionIndex = (id: string, data: Array<{id: string}>) =>
+export const getSessionIndex = (id: string, data: Array<{ id: string }>) =>
   data.findIndex((session) => session?.id === id);
 
 export const updateSession = (
@@ -19,31 +19,32 @@ export const updateSession = (
 };
 
 export const addReviewerToAttendee = (
-  list: Array<string>,
+  list: Array<types.TRequest>,
   reviewersAmount: number
 ) => (
   attendeeList: Array<types.TAttendee>,
-  author: string,
+  request: types.TRequest,
   index: number
 ): Array<types.TAttendee> => {
   const reviewerOf: Array<string> = [];
   let currentIndex = index;
   while (reviewerOf.length < reviewersAmount) {
     currentIndex = (list.length + currentIndex + 1) % list.length;
-    reviewerOf.push(list[currentIndex]);
+    reviewerOf.push(list[currentIndex].author);
   }
 
   return [
     ...attendeeList,
     {
-      githubId: author,
+      id: request.id,
+      author: request.author,
       reviewerOf,
     },
   ];
 };
 
 export const createReviewerDistribution = (
-  attendees: Array<string>,
+  attendees: Array<types.TRequest>,
   reviewersAmount: number
 ): Array<types.TAttendee> => {
   const shuffledList = shuffle(attendees);
@@ -54,10 +55,20 @@ export const createReviewerDistribution = (
   );
 };
 
-export const getAttendeeList = (
-  requests: Array<{ author: string }>
-): Array<string> => {
-  return requests.reduce((attendeeList: Array<string>, request) => {
-    return [...attendeeList, request.author];
-  }, []);
-};
+type TGetRequestList = (
+  requestData: Array<types.TRemoteRequestData>
+) => Array<types.TRequest>;
+
+const addRequest = (
+  requestList: Array<types.TRequest>,
+  request: types.TRemoteRequestData
+): Array<types.TRequest> => [
+  ...requestList,
+  {
+    id: request.id,
+    author: request.author,
+  },
+];
+
+export const getRequestList: TGetRequestList = (requestData) =>
+  requestData.reduce(addRequest, []);

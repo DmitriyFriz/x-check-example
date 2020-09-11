@@ -5,7 +5,7 @@ import reducer, { types, actions } from '.';
 import {
   addReviewerToAttendee,
   createReviewerDistribution,
-  getAttendeeList,
+  getRequestList,
   getSessionIndex,
 } from './utils';
 import { initCrossCheck, api } from './operations';
@@ -45,6 +45,34 @@ const data: Array<types.TSessionData> = [
   },
 ];
 
+const remoteRequestData = [
+  {
+    id: 'rev-req-1',
+    author: 'jack',
+    task: 'simple-task-v1',
+  },
+  {
+    id: 'rev-req-2',
+    author: 'john',
+    task: 'simple-task-v1',
+  },
+  {
+    id: 'rev-req-3',
+    author: 'boris-britva',
+    task: 'simple-task-v1',
+  },
+  {
+    id: 'rev-req-4',
+    author: 'macKlein',
+    task: 'simple-task-v1',
+  },
+  {
+    id: 'rev-req-5',
+    author: 'rediska',
+    task: 'simple-task-v1',
+  },
+];
+
 const requests = [
   {
     id: 'rev-req-1',
@@ -68,12 +96,29 @@ const requests = [
   },
 ];
 
-const list = ['jack', 'john', 'boris-britva', 'macKlein', 'rediska'];
-
 jest.mock('lodash.shuffle', () =>
-  jest
-    .fn()
-    .mockReturnValue(['john', 'jack', 'macKlein', 'boris-britva', 'rediska'])
+  jest.fn().mockReturnValue([
+    {
+      id: 'rev-req-2',
+      author: 'john',
+    },
+    {
+      id: 'rev-req-1',
+      author: 'jack',
+    },
+    {
+      id: 'rev-req-4',
+      author: 'macKlein',
+    },
+    {
+      id: 'rev-req-3',
+      author: 'boris-britva',
+    },
+    {
+      id: 'rev-req-5',
+      author: 'rediska',
+    },
+  ])
 );
 
 describe('Cross-check-session utils:', () => {
@@ -82,15 +127,19 @@ describe('Cross-check-session utils:', () => {
     expect(index).toBe(1);
   });
 
-  it('getAttendeeList should return an attendee list', () => {
-    const attendeeList = getAttendeeList(requests);
-    expect(attendeeList).toEqual(list);
+  it('getRequestList should return an request list', () => {
+    const requestList = getRequestList(remoteRequestData);
+    expect(requestList).toEqual(requests);
   });
 
   it('addReviewerToAttendee should add reviewers to an attendee', () => {
-    const reviewers = addReviewerToAttendee(list, 2)([], 'jack', 0);
+    const reviewers = addReviewerToAttendee(remoteRequestData, 2)(
+      [],
+      remoteRequestData[0],
+      0
+    );
     expect(reviewers).toEqual([
-      { githubId: 'jack', reviewerOf: ['john', 'boris-britva'] },
+      { id: 'rev-req-1', author: 'jack', reviewerOf: ['john', 'boris-britva'] },
     ]);
   });
 
@@ -98,29 +147,49 @@ describe('Cross-check-session utils:', () => {
     let distribution;
 
     it('createReviewerDistribution should create reviewer distribution per 1 reviewers amount', () => {
-      distribution = createReviewerDistribution(list, 1);
+      distribution = createReviewerDistribution(remoteRequestData, 1);
       expect(distribution).toEqual([
-        { githubId: 'john', reviewerOf: ['jack'] },
-        { githubId: 'jack', reviewerOf: ['macKlein'] },
-        { githubId: 'macKlein', reviewerOf: ['boris-britva'] },
-        { githubId: 'boris-britva', reviewerOf: ['rediska'] },
-        { githubId: 'rediska', reviewerOf: ['john'] },
+        { id: 'rev-req-2', author: 'john', reviewerOf: ['jack'] },
+        { id: 'rev-req-1', author: 'jack', reviewerOf: ['macKlein'] },
+        { id: 'rev-req-4', author: 'macKlein', reviewerOf: ['boris-britva'] },
+        { id: 'rev-req-3', author: 'boris-britva', reviewerOf: ['rediska'] },
+        { id: 'rev-req-5', author: 'rediska', reviewerOf: ['john'] },
       ]);
     });
 
     it('createReviewerDistribution should create reviewer distribution per 2 reviewers amount', () => {
-      distribution = createReviewerDistribution(list, 2);
+      distribution = createReviewerDistribution(remoteRequestData, 2);
       expect(distribution).toEqual([
-        { githubId: 'john', reviewerOf: ['jack', 'macKlein'] },
-        { githubId: 'jack', reviewerOf: ['macKlein', 'boris-britva'] },
-        { githubId: 'macKlein', reviewerOf: ['boris-britva', 'rediska'] },
-        { githubId: 'boris-britva', reviewerOf: ['rediska', 'john'] },
-        { githubId: 'rediska', reviewerOf: ['john', 'jack'] },
+        {
+          id: 'rev-req-2',
+          author: 'john',
+          reviewerOf: ['jack', 'macKlein'],
+        },
+        {
+          id: 'rev-req-1',
+          author: 'jack',
+          reviewerOf: ['macKlein', 'boris-britva'],
+        },
+        {
+          id: 'rev-req-4',
+          author: 'macKlein',
+          reviewerOf: ['boris-britva', 'rediska'],
+        },
+        {
+          id: 'rev-req-3',
+          author: 'boris-britva',
+          reviewerOf: ['rediska', 'john'],
+        },
+        {
+          id: 'rev-req-5',
+          author: 'rediska',
+          reviewerOf: ['john', 'jack'],
+        },
       ]);
     });
 
     it('attendee amount should be equal a result length', () => {
-      expect(distribution.length).toBe(list.length);
+      expect(distribution.length).toBe(remoteRequestData.length);
     });
   });
 });
@@ -200,18 +269,22 @@ describe('Cross-check-session reducer', () => {
 
 describe('initCrossCheck operation', () => {
   let action: types.TUpdateSession;
+
   beforeEach(async () => {
-    fetchMock.getOnce(/crossCheckSessionId=rss2020Q3react/, {
+    fetchMock.getOnce(/id=rss2020Q3react/, {
       status: 200,
-      body: JSON.stringify(requests),
+      body: JSON.stringify(remoteRequestData),
     });
+
     fetchMock.putOnce(/rss2020Q3react/, {
       status: 200,
       body: JSON.stringify(updatedData),
     });
+  
     await store.dispatch(initCrossCheck(id));
     [action] = store.getActions();
   });
+
   afterEach(() => {
     fetchMock.restore();
   });
@@ -235,12 +308,12 @@ describe('initCrossCheck operation', () => {
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: createReviewerDistribution(list, 2),
+    attendees: createReviewerDistribution(remoteRequestData, 2),
   };
 
   it('session should send a request to get requests', () => {
     expect(spyGetByFilter).toBeCalled();
-    expect(spyGetByFilter).toBeCalledWith(`crossCheckSessionId=${id}`);
+    expect(spyGetByFilter).toBeCalledWith(`id=${id}`);
   });
 
   it('session should have a state "CROSS_CHECK"', () => {

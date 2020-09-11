@@ -47,15 +47,18 @@
       "desiredReviewersAmount": 2,
       "attendees": [
         {
-          "githubId": "ButterBrot777",
+          "id": "rev-req-1",
+          "author": "ButterBrot777",
           "reviewerOf": ["torvalds", "cardamo"]
         },
         {
-          "githubId": "torvalds",
+          "id": "rev-req-2",
+          "author": "torvalds",
           "reviewerOf": ["cardamo"]
         },
         {
-          "githubId": "cardamo",
+          "id": "rev-req-3",
+          "author": "cardamo",
           "reviewerOf": ["ButterBrot777"]
         }
       ]
