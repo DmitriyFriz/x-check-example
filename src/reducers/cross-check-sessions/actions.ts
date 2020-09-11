@@ -43,10 +43,3 @@ export const openRequestGathering = (id: string): types.TAction => ({
     id
   },
 });
-
-export const closeRequestGathering = (id: string): types.TAction => ({
-  type: types.CLOSE_REQUESTS_GATHERING,
-  payload: {
-    id
-  },
-});

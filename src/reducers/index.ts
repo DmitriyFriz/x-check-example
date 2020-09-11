@@ -19,6 +19,10 @@ export type TAppStateType = ReturnType<ReturnType<typeof createRootReducer>>;
 
 export type TThunk<Action, Args = {}> = (
   args: Args
-) => (dispatch: Dispatch<Action>, getState: () => TAppStateType) => void;
+) => (
+  dispatch: Dispatch<Action>,
+  getState: () => TAppStateType
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+) => Promise<any>;
 
 export default createRootReducer;

@@ -4,7 +4,6 @@ export const CREATE_SESSION = 'CREATE_SESSION';
 export const UPDATE_SESSION = 'UPDATE_SESSION';
 export const DELETE_SESSION = 'DELETE_SESSION';
 export const OPEN_REQUESTS_GATHERING = 'OPEN_REQUESTS_GATHERING';
-export const CLOSE_REQUESTS_GATHERING = 'CLOSE_REQUESTS_GATHERING';
 export const COMPLETE_CROSS_CHECK = 'COMPLETE_CROSS_CHECK';
 
 type TSessionState =
@@ -28,7 +27,7 @@ export type TSessionData = {
   discardMinScore: boolean;
   discardMaxScore: false;
   minReviewsAmount: number;
-  desiredReviewersAmount: number
+  desiredReviewersAmount: number;
   attendees: Array<TAttendee>;
 };
 
@@ -82,13 +81,6 @@ export type TOpenRequestGathering = {
   };
 };
 
-export type TCloseRequestGathering = {
-  type: typeof CLOSE_REQUESTS_GATHERING;
-  payload: {
-    id: string;
-  };
-};
-
 export type TState = {
   sessions: Array<TSessionData>;
   selected: string | null;
@@ -100,5 +92,4 @@ export type TAction =
   | TUpdateSession
   | TDeleteSession
   | TSelectSession
-  | TOpenRequestGathering
-  | TCloseRequestGathering;
+  | TOpenRequestGathering;

@@ -11,26 +11,27 @@ import Api from '../../services/XCheckApi';
 import { TThunk } from '..';
 import * as types from './types';
 
-const api = new Api();
+export const api = new Api();
 
-type Thunk = TThunk<types.TAction, string>;
+export type Thunk = TThunk<types.TAction, string>;
 type TRequests = Array<{ author: string }>;
 
-export const closeRequestGathering: Thunk = (id) => async (
+export const initCrossCheck: Thunk = (id) => async (
   dispatch,
   getState
 ) => {
-  const { crossCheckSession } = getState();
-  const { sessions } = crossCheckSession;
-  const currentSession = sessions[getSessionIndex(id, sessions)];
   const requests: TRequests = await api.reviewRequests.getByFilter(
     `crossCheckSessionId=${id}`
   );
   const attendeeList = getAttendeeList(requests);
+  const { crossCheckSession } = getState();
+  const { sessions } = crossCheckSession;
+  const currentSession = sessions[getSessionIndex(id, sessions)];
   const distribution = createReviewerDistribution(
     attendeeList,
     currentSession.desiredReviewersAmount
   );
+  
   dispatch(
     actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution })
   );
