@@ -49,17 +49,17 @@
         {
           "id": "rev-req-1",
           "author": "ButterBrot777",
-          "reviewerOf": ["torvalds", "cardamo"]
-        },
-        {
-          "id": "rev-req-2",
-          "author": "torvalds",
-          "reviewerOf": ["cardamo"]
-        },
-        {
-          "id": "rev-req-3",
-          "author": "cardamo",
-          "reviewerOf": ["ButterBrot777"]
+          "score": 74,
+          "reviewerOf": [
+            {
+              "author": "torvalds",
+              "score": 60
+            },
+            {
+              "author": "cardamo",
+              "score": 83
+            }
+          ]
         }
       ]
     }

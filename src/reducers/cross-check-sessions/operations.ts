@@ -40,7 +40,7 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
 };
 
 // export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
-//   const requests: TRequests = await api.reviews.getByFilter(
+//   const requests: Array<types.TRemoteReviewsData> = await api.reviews.getByFilter(
 //     `id=${id}&state=ACCEPTED`
 //   );
 //   const attendeeList = getAttendeeList(requests);

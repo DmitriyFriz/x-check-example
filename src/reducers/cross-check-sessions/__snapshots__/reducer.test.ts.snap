@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cross-check-session utils: addReviewerToAttendee should add reviewers to an attendee 1`] = `
+Array [
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+]
+`;
+
+exports[`Cross-check-session utils: createReviewerDistribution: createReviewerDistribution should create reviewer distribution per 1 reviewers amount 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+]
+`;
+
+exports[`Cross-check-session utils: createReviewerDistribution: createReviewerDistribution should create reviewer distribution per 2 reviewers amount 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 0,
+      },
+      Object {
+        "author": "macKlein",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 0,
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+      },
+      Object {
+        "author": "rediska",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 0,
+      },
+      Object {
+        "author": "john",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+      },
+      Object {
+        "author": "jack",
+        "score": 0,
+      },
+    ],
+    "score": 0,
+  },
+]
+`;

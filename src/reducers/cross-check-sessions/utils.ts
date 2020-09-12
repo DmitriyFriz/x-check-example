@@ -26,11 +26,14 @@ export const addReviewerToAttendee = (
   request: types.TRequest,
   index: number
 ): Array<types.TAttendee> => {
-  const reviewerOf: Array<string> = [];
+  const reviewerOf: Array<types.TReviewer> = [];
   let currentIndex = index;
   while (reviewerOf.length < reviewersAmount) {
     currentIndex = (list.length + currentIndex + 1) % list.length;
-    reviewerOf.push(list[currentIndex].author);
+    reviewerOf.push({
+      author: list[currentIndex].author,
+      score: 0
+    });
   }
 
   return [
@@ -38,6 +41,7 @@ export const addReviewerToAttendee = (
     {
       id: request.id,
       author: request.author,
+      score: 0,
       reviewerOf,
     },
   ];
@@ -67,8 +71,17 @@ const addRequest = (
   {
     id: request.id,
     author: request.author,
+    score: 0,
   },
 ];
 
 export const getRequestList: TGetRequestList = (requestData) =>
   requestData.reduce(addRequest, []);
+
+// export const createReview = (
+//   request: types.TAttendee & types.Partial<types.TReview>,
+//   remoteReviewData: types.TRemoteReviewsData,
+// ): types.TReview => {
+//   const review = 
+
+// };

@@ -77,22 +77,27 @@ const requests = [
   {
     id: 'rev-req-1',
     author: 'jack',
+    score: 0,
   },
   {
     id: 'rev-req-2',
     author: 'john',
+    score: 0,
   },
   {
     id: 'rev-req-3',
     author: 'boris-britva',
+    score: 0,
   },
   {
     id: 'rev-req-4',
     author: 'macKlein',
+    score: 0,
   },
   {
     id: 'rev-req-5',
     author: 'rediska',
+    score: 0,
   },
 ];
 
@@ -133,59 +138,25 @@ describe('Cross-check-session utils:', () => {
   });
 
   it('addReviewerToAttendee should add reviewers to an attendee', () => {
-    const reviewers = addReviewerToAttendee(remoteRequestData, 2)(
+    const reviewers = addReviewerToAttendee(requests, 2)(
       [],
-      remoteRequestData[0],
+      requests[0],
       0
     );
-    expect(reviewers).toEqual([
-      { id: 'rev-req-1', author: 'jack', reviewerOf: ['john', 'boris-britva'] },
-    ]);
+    expect(reviewers).toMatchSnapshot();
   });
 
   describe('createReviewerDistribution:', () => {
     let distribution;
 
     it('createReviewerDistribution should create reviewer distribution per 1 reviewers amount', () => {
-      distribution = createReviewerDistribution(remoteRequestData, 1);
-      expect(distribution).toEqual([
-        { id: 'rev-req-2', author: 'john', reviewerOf: ['jack'] },
-        { id: 'rev-req-1', author: 'jack', reviewerOf: ['macKlein'] },
-        { id: 'rev-req-4', author: 'macKlein', reviewerOf: ['boris-britva'] },
-        { id: 'rev-req-3', author: 'boris-britva', reviewerOf: ['rediska'] },
-        { id: 'rev-req-5', author: 'rediska', reviewerOf: ['john'] },
-      ]);
+      distribution = createReviewerDistribution(requests, 1);
+      expect(distribution).toMatchSnapshot();
     });
 
     it('createReviewerDistribution should create reviewer distribution per 2 reviewers amount', () => {
-      distribution = createReviewerDistribution(remoteRequestData, 2);
-      expect(distribution).toEqual([
-        {
-          id: 'rev-req-2',
-          author: 'john',
-          reviewerOf: ['jack', 'macKlein'],
-        },
-        {
-          id: 'rev-req-1',
-          author: 'jack',
-          reviewerOf: ['macKlein', 'boris-britva'],
-        },
-        {
-          id: 'rev-req-4',
-          author: 'macKlein',
-          reviewerOf: ['boris-britva', 'rediska'],
-        },
-        {
-          id: 'rev-req-3',
-          author: 'boris-britva',
-          reviewerOf: ['rediska', 'john'],
-        },
-        {
-          id: 'rev-req-5',
-          author: 'rediska',
-          reviewerOf: ['john', 'jack'],
-        },
-      ]);
+      distribution = createReviewerDistribution(requests, 2);
+      expect(distribution).toMatchSnapshot();
     });
 
     it('attendee amount should be equal a result length', () => {
@@ -280,7 +251,7 @@ describe('initCrossCheck operation', () => {
       status: 200,
       body: JSON.stringify(updatedData),
     });
-  
+
     await store.dispatch(initCrossCheck(id));
     [action] = store.getActions();
   });
@@ -308,7 +279,7 @@ describe('initCrossCheck operation', () => {
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: createReviewerDistribution(remoteRequestData, 2),
+    attendees: createReviewerDistribution(requests, 2),
   };
 
   it('session should send a request to get requests', () => {

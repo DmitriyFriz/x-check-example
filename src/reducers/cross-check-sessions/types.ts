@@ -15,12 +15,24 @@ type TSessionState =
 export type TRequest = {
   id: string;
   author: string;
+  score: number;
+};
+
+export type TReviewer = {
+  author: string;
+  score: number;
 };
 
 export type TRemoteRequestData = { author: string; id: string };
+export type TRemoteReviewsData = {
+  author: string;
+  id: string;
+  requestId: string;
+  score: number;
+};
 
 export type TAttendee = TRequest & {
-  reviewerOf: Array<string | null>;
+  reviewerOf: Array<TReviewer>;
 };
 
 export type TSessionData = {
@@ -58,7 +70,7 @@ export type TCreateSession = {
   };
 };
 
-type Partial<T> = {
+export type Partial<T> = {
   [K in keyof T]?: T[K];
 };
 
