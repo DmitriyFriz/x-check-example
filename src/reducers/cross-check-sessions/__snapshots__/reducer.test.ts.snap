@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Cross-check-session utils: addReviewerToAttendee should add reviewers to an attendee 1`] = `
+exports[`Cross-check-session utils: addReviewerToRequest should add reviewers to an attendee 1`] = `
 Array [
   Object {
     "author": "jack",
@@ -9,13 +9,16 @@ Array [
       Object {
         "author": "john",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "boris-britva",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
 ]
 `;
@@ -29,13 +32,16 @@ Array [
       Object {
         "author": "jack",
         "score": 54,
+        "state": "ACCEPTED",
       },
       Object {
         "author": "macKlein",
         "score": 51,
+        "state": "ACCEPTED",
       },
     ],
     "score": 53,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "jack",
@@ -44,13 +50,16 @@ Array [
       Object {
         "author": "macKlein",
         "score": 57,
+        "state": "ACCEPTED",
       },
       Object {
         "author": "boris-britva",
         "score": 48,
+        "state": "ACCEPTED",
       },
     ],
     "score": 53,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "macKlein",
@@ -59,13 +68,16 @@ Array [
       Object {
         "author": "boris-britva",
         "score": 45,
+        "state": "ACCEPTED",
       },
       Object {
         "author": "rediska",
         "score": 89,
+        "state": "ACCEPTED",
       },
     ],
     "score": 67,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "boris-britva",
@@ -74,13 +86,16 @@ Array [
       Object {
         "author": "rediska",
         "score": 80,
+        "state": "ACCEPTED",
       },
       Object {
         "author": "john",
         "score": 88,
+        "state": "DISPUTED",
       },
     ],
-    "score": 84,
+    "score": 80,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "rediska",
@@ -89,18 +104,21 @@ Array [
       Object {
         "author": "john",
         "score": 81,
+        "state": "ACCEPTED",
       },
       Object {
         "author": "jack",
         "score": 53,
+        "state": "ACCEPTED",
       },
     ],
     "score": 67,
+    "state": "PUBLISHED",
   },
 ]
 `;
 
-exports[`Cross-check-session utils: addScoreToRequest:  result should match to snapshot 1`] = `
+exports[`Cross-check-session utils: addScoreToRequest:  should add score to reviewers 1`] = `
 Object {
   "author": "john",
   "id": "rev-req-2",
@@ -108,31 +126,16 @@ Object {
     Object {
       "author": "jack",
       "score": 54,
+      "state": "ACCEPTED",
     },
     Object {
       "author": "macKlein",
       "score": 51,
+      "state": "ACCEPTED",
     },
   ],
   "score": 53,
-}
-`;
-
-exports[`Cross-check-session utils: addScoreToRequest:  should not add a score to an inappropriate request 1`] = `
-Object {
-  "author": "john",
-  "id": "rev-req-2",
-  "reviewerOf": Array [
-    Object {
-      "author": "jack",
-      "score": null,
-    },
-    Object {
-      "author": "macKlein",
-      "score": null,
-    },
-  ],
-  "score": null,
+  "state": "PUBLISHED",
 }
 `;
 
@@ -140,10 +143,11 @@ exports[`Cross-check-session utils: addScoreToReviewer:  should not change other
 Object {
   "author": "jack",
   "score": 54,
+  "state": "ACCEPTED",
 }
 `;
 
-exports[`Cross-check-session utils: createReviewerDistribution: createReviewerDistribution should create reviewer distribution per 1 reviewers amount 1`] = `
+exports[`Cross-check-session utils: createReviewerDistribution: should create reviewer distribution per 1 reviewers amount 1`] = `
 Array [
   Object {
     "author": "john",
@@ -152,9 +156,11 @@ Array [
       Object {
         "author": "jack",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "jack",
@@ -163,9 +169,11 @@ Array [
       Object {
         "author": "macKlein",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "macKlein",
@@ -174,9 +182,11 @@ Array [
       Object {
         "author": "boris-britva",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "boris-britva",
@@ -185,9 +195,11 @@ Array [
       Object {
         "author": "rediska",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "rediska",
@@ -196,14 +208,16 @@ Array [
       Object {
         "author": "john",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
 ]
 `;
 
-exports[`Cross-check-session utils: createReviewerDistribution: createReviewerDistribution should create reviewer distribution per 2 reviewers amount 1`] = `
+exports[`Cross-check-session utils: createReviewerDistribution: should create reviewer distribution per 2 reviewers amount 1`] = `
 Array [
   Object {
     "author": "john",
@@ -212,13 +226,16 @@ Array [
       Object {
         "author": "jack",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "macKlein",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "jack",
@@ -227,13 +244,16 @@ Array [
       Object {
         "author": "macKlein",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "boris-britva",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "macKlein",
@@ -242,13 +262,16 @@ Array [
       Object {
         "author": "boris-britva",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "rediska",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "boris-britva",
@@ -257,13 +280,16 @@ Array [
       Object {
         "author": "rediska",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "john",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
   },
   Object {
     "author": "rediska",
@@ -272,13 +298,51 @@ Array [
       Object {
         "author": "john",
         "score": null,
+        "state": null,
       },
       Object {
         "author": "jack",
         "score": null,
+        "state": null,
       },
     ],
     "score": null,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: getRequestList should return an request list 1`] = `
+Array [
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "score": null,
+    "state": "PUBLISHED",
   },
 ]
 `;

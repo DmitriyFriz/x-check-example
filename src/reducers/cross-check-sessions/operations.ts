@@ -4,6 +4,7 @@ import {
   createReviewerDistribution,
   getRequestList,
   getSessionIndex,
+  addScoreToAllRequests,
 } from './utils';
 // Api
 import Api from '../../services/XCheckApi';
@@ -19,12 +20,12 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
   const requests: Array<types.TRemoteRequestData> = await api.reviewRequests.getByFilter(
     `id=${id}`
   );
-  const attendeeList = getRequestList(requests);
+  const requestList = getRequestList(requests);
   const { crossCheckSession } = getState();
   const { sessions } = crossCheckSession;
   const currentSession = sessions[getSessionIndex(id, sessions)];
   const distribution = createReviewerDistribution(
-    attendeeList,
+    requestList,
     currentSession.desiredReviewersAmount
   );
 
@@ -40,17 +41,14 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
 };
 
 // export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
-//   const requests: Array<types.TRemoteReviewsData> = await api.reviews.getByFilter(
-//     `id=${id}&state=ACCEPTED`
+//   const reviews: Array<types.TRemoteReviewsData> = await api.reviews.getByFilter(
+//     `id=${id}`
 //   );
-//   const attendeeList = getAttendeeList(requests);
+//   const acceptedReviews = reviews.filter((review) => review.)
 //   const { crossCheckSession } = getState();
 //   const { sessions } = crossCheckSession;
 //   const currentSession = sessions[getSessionIndex(id, sessions)];
-//   const distribution = createReviewerDistribution(
-//     attendeeList,
-//     currentSession.desiredReviewersAmount
-//   );
+//   const requestWithScore = addScoreToAllRequests(reviews);
 
 //   dispatch(
 //     actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution })

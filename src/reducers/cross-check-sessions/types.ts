@@ -12,26 +12,44 @@ type TSessionState =
   | 'CROSS_CHECK'
   | 'COMPLETED';
 
+type TReviewState =
+  | 'DRAFT'
+  | 'PUBLISHED'
+  | 'DISPUTED'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | null;
+
+export type TRequestState = 'DRAFT' | 'PUBLISHED' | 'COMPLETED';
+
 export type TRequest = {
   id: string;
   author: string;
   score: number | null;
+  state: TRequestState;
 };
 
 export type TReviewer = {
   author: string;
   score: number | null;
+  state: TReviewState;
 };
 
-export type TRemoteRequestData = { author: string; id: string };
+export type TRemoteRequestData = {
+  author: string;
+  id: string;
+  state: TRequestState;
+};
+
 export type TRemoteReviewsData = {
   author: string;
   id: string;
   requestId: string;
   score: number;
+  state: TReviewState;
 };
 
-export type TAttendee = TRequest & {
+export type TRequestWithReviewers = TRequest & {
   reviewerOf: Array<TReviewer>;
 };
 
@@ -46,7 +64,7 @@ export type TSessionData = {
   discardMaxScore: false;
   minReviewsAmount: number;
   desiredReviewersAmount: number;
-  attendees: Array<TAttendee>;
+  attendees: Array<TRequestWithReviewers>;
 };
 
 export type TSetSessionsData = {

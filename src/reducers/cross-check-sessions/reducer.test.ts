@@ -10,6 +10,7 @@ import {
   addScoreToReviewer,
   addScoreToRequest,
   addScoreToAllRequests,
+  getReviewersByRequestId,
 } from './utils';
 import { initCrossCheck, api } from './operations';
 import { TAppStateType } from '..';
@@ -48,61 +49,66 @@ const data: Array<types.TSessionData> = [
   },
 ];
 
-const remoteRequestData = [
+const remoteRequestData: Array<types.TRemoteRequestData> = [
   {
     id: 'rev-req-1',
     author: 'jack',
-    task: 'simple-task-v1',
+    state: 'PUBLISHED',
   },
   {
     id: 'rev-req-2',
     author: 'john',
-    task: 'simple-task-v1',
+    state: 'PUBLISHED',
   },
   {
     id: 'rev-req-3',
     author: 'boris-britva',
-    task: 'simple-task-v1',
+    state: 'PUBLISHED',
   },
   {
     id: 'rev-req-4',
     author: 'macKlein',
-    task: 'simple-task-v1',
+    state: 'PUBLISHED',
   },
   {
     id: 'rev-req-5',
     author: 'rediska',
-    task: 'simple-task-v1',
+    state: 'PUBLISHED',
+  },
+  {
+    id: 'rev-req-6',
+    author: 'rabbit',
+    state: 'DRAFT',
   },
 ];
 
-const requests = [
-  {
-    id: 'rev-req-1',
-    author: 'jack',
-    score: null,
-  },
-  {
-    id: 'rev-req-2',
-    author: 'john',
-    score: null,
-  },
-  {
-    id: 'rev-req-3',
-    author: 'boris-britva',
-    score: null,
-  },
-  {
-    id: 'rev-req-4',
-    author: 'macKlein',
-    score: null,
-  },
-  {
-    id: 'rev-req-5',
-    author: 'rediska',
-    score: null,
-  },
-];
+// const requests = [
+//   {
+//     id: 'rev-req-1',
+//     author: 'jack',
+//     score: null,
+//   },
+//   {
+//     id: 'rev-req-2',
+//     author: 'john',
+//     score: null,
+//   },
+//   {
+//     id: 'rev-req-3',
+//     author: 'boris-britva',
+//     score: null,
+//   },
+//   {
+//     id: 'rev-req-4',
+//     author: 'macKlein',
+//     score: null,
+//   },
+//   {
+//     id: 'rev-req-5',
+//     author: 'rediska',
+//     score: null,
+//   },
+// ];
 
 const remoteReviewData: Array<types.TRemoteReviewsData> = [
   {
@@ -110,60 +116,70 @@ const remoteReviewData: Array<types.TRemoteReviewsData> = [
     requestId: 'rev-req-2',
     author: 'jack',
     score: 54,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-2',
     requestId: 'rev-req-5',
     author: 'jack',
     score: 53,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-3',
     requestId: 'rev-req-3',
     author: 'john',
     score: 88,
+    state: 'DISPUTED',
   },
   {
     id: 'rev-4',
     requestId: 'rev-req-5',
     author: 'john',
     score: 81,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-5',
     requestId: 'rev-req-4',
     author: 'boris-britva',
     score: 45,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-6',
     requestId: 'rev-req-1',
     author: 'boris-britva',
     score: 48,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-7',
     requestId: 'rev-req-1',
     author: 'macKlein',
     score: 57,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-8',
     requestId: 'rev-req-2',
     author: 'macKlein',
     score: 51,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-9',
     requestId: 'rev-req-3',
     author: 'rediska',
     score: 80,
+    state: 'ACCEPTED',
   },
   {
     id: 'rev-10',
     requestId: 'rev-req-4',
     author: 'rediska',
     score: 89,
+    state: 'ACCEPTED',
   },
 ];
 
@@ -172,69 +188,81 @@ jest.mock('lodash.shuffle', () =>
     {
       id: 'rev-req-2',
       author: 'john',
+      state: 'PUBLISHED',
     },
     {
       id: 'rev-req-1',
       author: 'jack',
+      state: 'PUBLISHED',
     },
     {
       id: 'rev-req-4',
       author: 'macKlein',
+      state: 'PUBLISHED',
     },
     {
       id: 'rev-req-3',
       author: 'boris-britva',
+      state: 'PUBLISHED',
     },
     {
       id: 'rev-req-5',
       author: 'rediska',
+      state: 'PUBLISHED',
     },
   ])
 );
 
 describe('Cross-check-session utils:', () => {
+  let requestList: Array<types.TRequest>;
   it('getSessionIndex should return an session index', () => {
     const index = getSessionIndex('rss2020Q3Angular', data);
     expect(index).toBe(1);
   });
 
   it('getRequestList should return an request list', () => {
-    const requestList = getRequestList(remoteRequestData);
-    expect(requestList).toEqual(requests);
+    requestList = getRequestList(remoteRequestData);
+    expect(requestList).toMatchSnapshot();
   });
 
-  it('addReviewerToAttendee should add reviewers to an attendee', () => {
-    const reviewers = addReviewerToRequest(requests, 2)([], requests[0], 0);
+  it('addReviewerToRequest should add reviewers to an attendee', () => {
+    const reviewers = addReviewerToRequest(requestList, 2)(
+      [],
+      requestList[0],
+      0
+    );
     expect(reviewers).toMatchSnapshot();
   });
 
   describe('createReviewerDistribution:', () => {
     let distribution;
 
-    it('createReviewerDistribution should create reviewer distribution per 1 reviewers amount', () => {
-      distribution = createReviewerDistribution(requests, 1);
+    it('should create reviewer distribution per 1 reviewers amount', () => {
+      distribution = createReviewerDistribution(requestList, 1);
       expect(distribution).toMatchSnapshot();
     });
 
-    it('createReviewerDistribution should create reviewer distribution per 2 reviewers amount', () => {
-      distribution = createReviewerDistribution(requests, 2);
+    it('should create reviewer distribution per 2 reviewers amount', () => {
+      distribution = createReviewerDistribution(requestList, 2);
       expect(distribution).toMatchSnapshot();
     });
 
-    it('attendee amount should be equal a result length', () => {
-      expect(distribution.length).toBe(remoteRequestData.length);
+    it('reviewers without state PUBLISHED should not be added', () => {
+      expect(distribution.length).toBe(remoteRequestData.length - 1);
     });
   });
 
   describe('addScoreToReviewer: ', () => {
-    const reviewers = [
+    const reviewers: Array<types.TReviewer> = [
       {
         author: 'jack',
         score: null,
+        state: null,
       },
       {
         author: 'macKlein',
         score: null,
+        state: null,
       },
     ];
 
@@ -263,52 +291,42 @@ describe('Cross-check-session utils:', () => {
   });
 
   describe('addScoreToRequest: ', () => {
-    const request = {
+    const request: types.TRequestWithReviewers = {
       author: 'john',
       id: 'rev-req-2',
       score: null,
+      state: 'PUBLISHED',
       reviewerOf: [
         {
           author: 'jack',
           score: null,
+          state: null,
         },
         {
           author: 'macKlein',
           score: null,
+          state: null,
         },
       ],
     };
 
-    let requestWithScore: types.TAttendee;
-    it('should add a score to an appropriate request', () => {
-      requestWithScore = addScoreToRequest(request, remoteReviewData[0]);
-      expect(requestWithScore.score).toBe(54);
-    });
-
+    const reviews = getReviewersByRequestId('rev-req-2', remoteReviewData);
+    const requestWithScore = addScoreToRequest(request, reviews);
     it('should calculate an average value', () => {
-      requestWithScore = addScoreToRequest(
-        requestWithScore,
-        remoteReviewData[7]
-      );
       expect(requestWithScore.score).toBe(53);
     });
 
-    it('result should match to snapshot', () => {
+    it('should add score to reviewers', () => {
       expect(requestWithScore).toMatchSnapshot();
-    });
-
-    it('should not add a score to an inappropriate request', () => {
-      const reviewersWithNotScore = addScoreToRequest(
-        request,
-        remoteReviewData[1]
-      );
-      expect(reviewersWithNotScore).toMatchSnapshot();
     });
   });
 
   describe('addScoreToAllRequests', () => {
     it('should add score to all request of a list', () => {
-      const requestsWithReviewers = createReviewerDistribution(requests, 2);
+      const requestsWithReviewers = createReviewerDistribution(
+        getRequestList(remoteRequestData),
+        2
+      );
       const result = addScoreToAllRequests(
         remoteReviewData,
         requestsWithReviewers
@@ -432,7 +450,7 @@ describe('initCrossCheck operation', () => {
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: createReviewerDistribution(requests, 2),
+    attendees: createReviewerDistribution(getRequestList(remoteRequestData), 2),
   };
 
   it('session should send a request to get requests', () => {
