@@ -20,6 +20,86 @@ Array [
 ]
 `;
 
+exports[`Cross-check-session utils: addScoreToAllRequests should add score to all request of a list 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 54,
+      },
+      Object {
+        "author": "macKlein",
+        "score": 51,
+      },
+    ],
+    "score": 53,
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 57,
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 48,
+      },
+    ],
+    "score": 53,
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 45,
+      },
+      Object {
+        "author": "rediska",
+        "score": 89,
+      },
+    ],
+    "score": 67,
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 80,
+      },
+      Object {
+        "author": "john",
+        "score": 88,
+      },
+    ],
+    "score": 84,
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 81,
+      },
+      Object {
+        "author": "jack",
+        "score": 53,
+      },
+    ],
+    "score": 67,
+  },
+]
+`;
+
 exports[`Cross-check-session utils: addScoreToRequest:  result should match to snapshot 1`] = `
 Object {
   "author": "john",

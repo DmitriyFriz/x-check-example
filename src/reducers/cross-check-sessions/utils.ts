@@ -120,3 +120,19 @@ export const addScoreToRequest = (
     reviewerOf: addScoreToReviewer(remoteReviewData)(request.reviewerOf),
   };
 };
+
+export const addScoreToAllRequests = (
+  reviewList: Array<types.TRemoteReviewsData>,
+  requestList: Array<types.TAttendee>
+) =>
+  [...requestList].map((request) => {
+    let requestWithScore = { ...request };
+    const reviewers = reviewList.filter(
+      (review) => review.requestId === request.id
+    );
+    reviewers.forEach((review) => {
+      requestWithScore = addScoreToRequest(requestWithScore, review);
+    });
+
+    return requestWithScore;
+  });

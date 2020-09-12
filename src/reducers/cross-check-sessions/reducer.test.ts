@@ -9,6 +9,7 @@ import {
   getSessionIndex,
   addScoreToReviewer,
   addScoreToRequest,
+  addScoreToAllRequests,
 } from './utils';
 import { initCrossCheck, api } from './operations';
 import { TAppStateType } from '..';
@@ -302,6 +303,17 @@ describe('Cross-check-session utils:', () => {
         remoteReviewData[1]
       );
       expect(reviewersWithNotScore).toMatchSnapshot();
+    });
+  });
+
+  describe('addScoreToAllRequests', () => {
+    it('should add score to all request of a list', () => {
+      const requestsWithReviewers = createReviewerDistribution(requests, 2);
+      const result = addScoreToAllRequests(
+        remoteReviewData,
+        requestsWithReviewers
+      );
+      expect(result).toMatchSnapshot();
     });
   });
 });
