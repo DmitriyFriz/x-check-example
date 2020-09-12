@@ -18,33 +18,40 @@ export const updateSession = (
   return updatedData;
 };
 
-export const addReviewerToAttendee = (
+type TAddReviewerToRequest = (
   list: Array<types.TRequest>,
   reviewersAmount: number
 ) => (
   attendeeList: Array<types.TAttendee>,
   request: types.TRequest,
   index: number
-): Array<types.TAttendee> => {
-  const reviewerOf: Array<types.TReviewer> = [];
-  let currentIndex = index;
-  while (reviewerOf.length < reviewersAmount) {
-    currentIndex = (list.length + currentIndex + 1) % list.length;
-    reviewerOf.push({
-      author: list[currentIndex].author,
-      score: 0
-    });
-  }
+) => Array<types.TAttendee>;
 
-  return [
-    ...attendeeList,
-    {
-      id: request.id,
-      author: request.author,
-      score: 0,
-      reviewerOf,
-    },
-  ];
+export const addReviewerToRequest: TAddReviewerToRequest = (
+  list,
+  reviewersAmount
+) => {
+  return (attendeeList, request, index) => {
+    const reviewerOf: Array<types.TReviewer> = [];
+    let currentIndex = index;
+    while (reviewerOf.length < reviewersAmount) {
+      currentIndex = (list.length + currentIndex + 1) % list.length;
+      reviewerOf.push({
+        author: list[currentIndex].author,
+        score: null,
+      });
+    }
+
+    return [
+      ...attendeeList,
+      {
+        id: request.id,
+        author: request.author,
+        score: null,
+        reviewerOf,
+      },
+    ];
+  };
 };
 
 export const createReviewerDistribution = (
@@ -54,14 +61,10 @@ export const createReviewerDistribution = (
   const shuffledList = shuffle(attendees);
 
   return shuffledList.reduce(
-    addReviewerToAttendee(shuffledList, reviewersAmount),
+    addReviewerToRequest(shuffledList, reviewersAmount),
     []
   );
 };
-
-type TGetRequestList = (
-  requestData: Array<types.TRemoteRequestData>
-) => Array<types.TRequest>;
 
 const addRequest = (
   requestList: Array<types.TRequest>,
@@ -71,17 +74,49 @@ const addRequest = (
   {
     id: request.id,
     author: request.author,
-    score: 0,
+    score: null,
   },
 ];
+
+type TGetRequestList = (
+  requestData: Array<types.TRemoteRequestData>
+) => Array<types.TRequest>;
 
 export const getRequestList: TGetRequestList = (requestData) =>
   requestData.reduce(addRequest, []);
 
-// export const createReview = (
-//   request: types.TAttendee & types.Partial<types.TReview>,
-//   remoteReviewData: types.TRemoteReviewsData,
-// ): types.TReview => {
-//   const review = 
+export const addScoreToReviewer = (
+  remoteReviewData: types.TRemoteReviewsData
+) => {
+  return (reviewers: Array<types.TReviewer>) =>
+    reviewers.map(
+      (reviewer): types.TReviewer => {
+        if (reviewer.author !== remoteReviewData.author) {
+          return reviewer;
+        }
 
-// };
+        return {
+          ...reviewer,
+          score: remoteReviewData.score,
+        };
+      }
+    );
+};
+
+export const addScoreToRequest = (
+  request: types.TAttendee,
+  remoteReviewData: types.TRemoteReviewsData
+): types.TAttendee => {
+  if (request.id !== remoteReviewData.requestId) {
+    return request;
+  }
+
+  return {
+    ...request,
+    score:
+      request.score === null
+        ? remoteReviewData.score
+        : Math.round((request.score + remoteReviewData.score) / 2),
+    reviewerOf: addScoreToReviewer(remoteReviewData)(request.reviewerOf),
+  };
+};

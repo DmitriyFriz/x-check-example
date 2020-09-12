@@ -15,12 +15,12 @@ type TSessionState =
 export type TRequest = {
   id: string;
   author: string;
-  score: number;
+  score: number | null;
 };
 
 export type TReviewer = {
   author: string;
-  score: number;
+  score: number | null;
 };
 
 export type TRemoteRequestData = { author: string; id: string };

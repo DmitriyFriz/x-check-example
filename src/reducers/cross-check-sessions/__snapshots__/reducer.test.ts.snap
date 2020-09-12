@@ -8,16 +8,59 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "john",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "boris-britva",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
 ]
+`;
+
+exports[`Cross-check-session utils: addScoreToRequest:  result should match to snapshot 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-req-2",
+  "reviewerOf": Array [
+    Object {
+      "author": "jack",
+      "score": 54,
+    },
+    Object {
+      "author": "macKlein",
+      "score": 51,
+    },
+  ],
+  "score": 53,
+}
+`;
+
+exports[`Cross-check-session utils: addScoreToRequest:  should not add a score to an inappropriate request 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-req-2",
+  "reviewerOf": Array [
+    Object {
+      "author": "jack",
+      "score": null,
+    },
+    Object {
+      "author": "macKlein",
+      "score": null,
+    },
+  ],
+  "score": null,
+}
+`;
+
+exports[`Cross-check-session utils: addScoreToReviewer:  should not change other data 1`] = `
+Object {
+  "author": "jack",
+  "score": 54,
+}
 `;
 
 exports[`Cross-check-session utils: createReviewerDistribution: createReviewerDistribution should create reviewer distribution per 1 reviewers amount 1`] = `
@@ -28,10 +71,10 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "jack",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "jack",
@@ -39,10 +82,10 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "macKlein",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "macKlein",
@@ -50,10 +93,10 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "boris-britva",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "boris-britva",
@@ -61,10 +104,10 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "rediska",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "rediska",
@@ -72,10 +115,10 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "john",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
 ]
 `;
@@ -88,14 +131,14 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "jack",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "macKlein",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "jack",
@@ -103,14 +146,14 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "macKlein",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "boris-britva",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "macKlein",
@@ -118,14 +161,14 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "boris-britva",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "rediska",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "boris-britva",
@@ -133,14 +176,14 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "rediska",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "john",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
   Object {
     "author": "rediska",
@@ -148,14 +191,14 @@ Array [
     "reviewerOf": Array [
       Object {
         "author": "john",
-        "score": 0,
+        "score": null,
       },
       Object {
         "author": "jack",
-        "score": 0,
+        "score": null,
       },
     ],
-    "score": 0,
+    "score": null,
   },
 ]
 `;

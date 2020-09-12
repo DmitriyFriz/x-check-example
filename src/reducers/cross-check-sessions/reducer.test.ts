@@ -3,10 +3,12 @@ import thunk, { ThunkDispatch } from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import reducer, { types, actions } from '.';
 import {
-  addReviewerToAttendee,
+  addReviewerToRequest,
   createReviewerDistribution,
   getRequestList,
   getSessionIndex,
+  addScoreToReviewer,
+  addScoreToRequest,
 } from './utils';
 import { initCrossCheck, api } from './operations';
 import { TAppStateType } from '..';
@@ -77,27 +79,90 @@ const requests = [
   {
     id: 'rev-req-1',
     author: 'jack',
-    score: 0,
+    score: null,
   },
   {
     id: 'rev-req-2',
     author: 'john',
-    score: 0,
+    score: null,
   },
   {
     id: 'rev-req-3',
     author: 'boris-britva',
-    score: 0,
+    score: null,
   },
   {
     id: 'rev-req-4',
     author: 'macKlein',
-    score: 0,
+    score: null,
   },
   {
     id: 'rev-req-5',
     author: 'rediska',
-    score: 0,
+    score: null,
+  },
+];
+
+const remoteReviewData: Array<types.TRemoteReviewsData> = [
+  {
+    id: 'rev-1',
+    requestId: 'rev-req-2',
+    author: 'jack',
+    score: 54,
+  },
+  {
+    id: 'rev-2',
+    requestId: 'rev-req-5',
+    author: 'jack',
+    score: 53,
+  },
+  {
+    id: 'rev-3',
+    requestId: 'rev-req-3',
+    author: 'john',
+    score: 88,
+  },
+  {
+    id: 'rev-4',
+    requestId: 'rev-req-5',
+    author: 'john',
+    score: 81,
+  },
+  {
+    id: 'rev-5',
+    requestId: 'rev-req-4',
+    author: 'boris-britva',
+    score: 45,
+  },
+  {
+    id: 'rev-6',
+    requestId: 'rev-req-1',
+    author: 'boris-britva',
+    score: 48,
+  },
+  {
+    id: 'rev-7',
+    requestId: 'rev-req-1',
+    author: 'macKlein',
+    score: 57,
+  },
+  {
+    id: 'rev-8',
+    requestId: 'rev-req-2',
+    author: 'macKlein',
+    score: 51,
+  },
+  {
+    id: 'rev-9',
+    requestId: 'rev-req-3',
+    author: 'rediska',
+    score: 80,
+  },
+  {
+    id: 'rev-10',
+    requestId: 'rev-req-4',
+    author: 'rediska',
+    score: 89,
   },
 ];
 
@@ -138,11 +203,7 @@ describe('Cross-check-session utils:', () => {
   });
 
   it('addReviewerToAttendee should add reviewers to an attendee', () => {
-    const reviewers = addReviewerToAttendee(requests, 2)(
-      [],
-      requests[0],
-      0
-    );
+    const reviewers = addReviewerToRequest(requests, 2)([], requests[0], 0);
     expect(reviewers).toMatchSnapshot();
   });
 
@@ -161,6 +222,86 @@ describe('Cross-check-session utils:', () => {
 
     it('attendee amount should be equal a result length', () => {
       expect(distribution.length).toBe(remoteRequestData.length);
+    });
+  });
+
+  describe('addScoreToReviewer: ', () => {
+    const reviewers = [
+      {
+        author: 'jack',
+        score: null,
+      },
+      {
+        author: 'macKlein',
+        score: null,
+      },
+    ];
+
+    it('should add a score to an appropriate reviewer', () => {
+      const reviewersWithScore = addScoreToReviewer(remoteReviewData[0])(
+        reviewers
+      );
+      expect(reviewersWithScore[0].score).toBe(54);
+      expect(reviewersWithScore[1].score).toBeNull();
+    });
+
+    it('should not add a score to an inappropriate reviewer', () => {
+      const reviewersWithScore = addScoreToReviewer(remoteReviewData[2])(
+        reviewers
+      );
+      expect(reviewersWithScore[0].score).toBeNull();
+      expect(reviewersWithScore[1].score).toBeNull();
+    });
+
+    it('should not change other data', () => {
+      const reviewersWithScore = addScoreToReviewer(remoteReviewData[0])(
+        reviewers
+      );
+      expect(reviewersWithScore[0]).toMatchSnapshot();
+    });
+  });
+
+  describe('addScoreToRequest: ', () => {
+    const request = {
+      author: 'john',
+      id: 'rev-req-2',
+      score: null,
+      reviewerOf: [
+        {
+          author: 'jack',
+          score: null,
+        },
+        {
+          author: 'macKlein',
+          score: null,
+        },
+      ],
+    };
+
+    let requestWithScore: types.TAttendee;
+    it('should add a score to an appropriate request', () => {
+      requestWithScore = addScoreToRequest(request, remoteReviewData[0]);
+      expect(requestWithScore.score).toBe(54);
+    });
+
+    it('should calculate an average value', () => {
+      requestWithScore = addScoreToRequest(
+        requestWithScore,
+        remoteReviewData[7]
+      );
+      expect(requestWithScore.score).toBe(53);
+    });
+
+    it('result should match to snapshot', () => {
+      expect(requestWithScore).toMatchSnapshot();
+    });
+
+    it('should not add a score to an inappropriate request', () => {
+      const reviewersWithNotScore = addScoreToRequest(
+        request,
+        remoteReviewData[1]
+      );
+      expect(reviewersWithNotScore).toMatchSnapshot();
     });
   });
 });
