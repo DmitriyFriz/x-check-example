@@ -5,12 +5,12 @@ import reducer, { types, actions } from '.';
 import {
   addReviewerToRequest,
   createReviewerDistribution,
-  getRequestList,
+  prepareRemoteRequestData,
   getSessionIndex,
-  addScoreToReviewer,
-  addScoreToRequest,
-  addScoreToAllRequests,
-  getReviewersByRequestId,
+  updateReviewers,
+  updateAllRequests,
+  updateRequest,
+  getReviewerDataById,
 } from './utils';
 import { initCrossCheck, api } from './operations';
 import { TAppStateType } from '..';
@@ -81,34 +81,6 @@ const remoteRequestData: Array<types.TRemoteRequestData> = [
     state: 'DRAFT',
   },
 ];
-
-// const requests = [
-//   {
-//     id: 'rev-req-1',
-//     author: 'jack',
-//     score: null,
-//   },
-//   {
-//     id: 'rev-req-2',
-//     author: 'john',
-//     score: null,
-//   },
-//   {
-//     id: 'rev-req-3',
-//     author: 'boris-britva',
-//     score: null,
-//   },
-//   {
-//     id: 'rev-req-4',
-//     author: 'macKlein',
-//     score: null,
-//   },
-//   {
-//     id: 'rev-req-5',
-//     author: 'rediska',
-//     score: null,
-//   },
-// ];
 
 const remoteReviewData: Array<types.TRemoteReviewsData> = [
   {
@@ -214,23 +186,19 @@ jest.mock('lodash.shuffle', () =>
 );
 
 describe('Cross-check-session utils:', () => {
-  let requestList: Array<types.TRequest>;
+  let requestList: Array<types.TRequestProps>;
   it('getSessionIndex should return an session index', () => {
     const index = getSessionIndex('rss2020Q3Angular', data);
     expect(index).toBe(1);
   });
 
-  it('getRequestList should return an request list', () => {
-    requestList = getRequestList(remoteRequestData);
+  it('prepareRemoteRequestData should filter data by state "PUBLISHED" and prepare each request', () => {
+    requestList = prepareRemoteRequestData(remoteRequestData);
     expect(requestList).toMatchSnapshot();
   });
 
   it('addReviewerToRequest should add reviewers to an attendee', () => {
-    const reviewers = addReviewerToRequest(requestList, 2)(
-      [],
-      requestList[0],
-      0
-    );
+    const reviewers = addReviewerToRequest(requestList, 2)([], requestList[0], 0);
     expect(reviewers).toMatchSnapshot();
   });
 
@@ -252,46 +220,8 @@ describe('Cross-check-session utils:', () => {
     });
   });
 
-  describe('addScoreToReviewer: ', () => {
-    const reviewers: Array<types.TReviewer> = [
-      {
-        author: 'jack',
-        score: null,
-        state: null,
-      },
-      {
-        author: 'macKlein',
-        score: null,
-        state: null,
-      },
-    ];
-
-    it('should add a score to an appropriate reviewer', () => {
-      const reviewersWithScore = addScoreToReviewer(remoteReviewData[0])(
-        reviewers
-      );
-      expect(reviewersWithScore[0].score).toBe(54);
-      expect(reviewersWithScore[1].score).toBeNull();
-    });
-
-    it('should not add a score to an inappropriate reviewer', () => {
-      const reviewersWithScore = addScoreToReviewer(remoteReviewData[2])(
-        reviewers
-      );
-      expect(reviewersWithScore[0].score).toBeNull();
-      expect(reviewersWithScore[1].score).toBeNull();
-    });
-
-    it('should not change other data', () => {
-      const reviewersWithScore = addScoreToReviewer(remoteReviewData[0])(
-        reviewers
-      );
-      expect(reviewersWithScore[0]).toMatchSnapshot();
-    });
-  });
-
-  describe('addScoreToRequest: ', () => {
-    const request: types.TRequestWithReviewers = {
+  describe('updateRequest: ', () => {
+    const request: types.TRequest = {
       author: 'john',
       id: 'rev-req-2',
       score: null,
@@ -299,38 +229,32 @@ describe('Cross-check-session utils:', () => {
       reviewerOf: [
         {
           author: 'jack',
-          score: null,
+          score: 0,
           state: null,
         },
         {
           author: 'macKlein',
-          score: null,
+          score: 0,
           state: null,
         },
       ],
     };
 
-    const reviews = getReviewersByRequestId('rev-req-2', remoteReviewData);
-    const requestWithScore = addScoreToRequest(request, reviews);
-    it('should calculate an average value', () => {
-      expect(requestWithScore.score).toBe(53);
+    const updatedReviewers = updateReviewers('rev-req-2', request.reviewerOf, remoteReviewData);
+    it('updateReviewers should update reviewers data of request', () => {
+      expect(updatedReviewers).toMatchSnapshot();
     });
 
-    it('should add score to reviewers', () => {
-      expect(requestWithScore).toMatchSnapshot();
+    it('should update request data', () => {
+      const updatedRequest = updateRequest(request, updatedReviewers);
+      expect(updatedRequest).toMatchSnapshot();
     });
   });
 
-  describe('addScoreToAllRequests', () => {
-    it('should add score to all request of a list', () => {
-      const requestsWithReviewers = createReviewerDistribution(
-        getRequestList(remoteRequestData),
-        2
-      );
-      const result = addScoreToAllRequests(
-        remoteReviewData,
-        requestsWithReviewers
-      );
+  describe('updateAllRequests', () => {
+    it('should update all requests for cross-check session', () => {
+      const requests = createReviewerDistribution(prepareRemoteRequestData(remoteRequestData), 2);
+      const result = updateAllRequests(remoteReviewData, requests);
       expect(result).toMatchSnapshot();
     });
   });
@@ -366,14 +290,8 @@ describe('Cross-check-session reducer', () => {
       state: 'COMPLETED',
       coefficient: 0.8,
     };
-    const state = reducer(
-      { ...initState, sessions: data },
-      actions.updateSession(inputData)
-    );
-    const indexOfUpdatedSession = getSessionIndex(
-      'rss2020Q3Angular',
-      state.sessions
-    );
+    const state = reducer({ ...initState, sessions: data }, actions.updateSession(inputData));
+    const indexOfUpdatedSession = getSessionIndex('rss2020Q3Angular', state.sessions);
 
     expect(state.sessions[indexOfUpdatedSession]).toEqual({
       ...state.sessions[indexOfUpdatedSession],
@@ -383,10 +301,7 @@ describe('Cross-check-session reducer', () => {
 
   it('deleteSession action should remove a session by id', () => {
     const id = 'rss2020Q3Angular';
-    const state = reducer(
-      { ...initState, sessions: data },
-      actions.deleteSession(id)
-    );
+    const state = reducer({ ...initState, sessions: data }, actions.deleteSession(id));
     const index = getSessionIndex(id, state.sessions);
 
     expect(index).toBe(-1);
@@ -395,10 +310,7 @@ describe('Cross-check-session reducer', () => {
 
   it('openRequestGathering action should change session state to "REQUEST_GATHERING"', () => {
     const id = 'rss2020Q3react';
-    const state = reducer(
-      { ...initState, sessions: data },
-      actions.openRequestGathering(id)
-    );
+    const state = reducer({ ...initState, sessions: data }, actions.openRequestGathering(id));
     const index = getSessionIndex(id, state.sessions);
 
     expect(state.sessions[index].state).toBe('REQUESTS_GATHERING');
@@ -450,7 +362,7 @@ describe('initCrossCheck operation', () => {
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: createReviewerDistribution(getRequestList(remoteRequestData), 2),
+    attendees: createReviewerDistribution(prepareRemoteRequestData(remoteRequestData), 2),
   };
 
   it('session should send a request to get requests', () => {

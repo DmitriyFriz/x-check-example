@@ -19,13 +19,13 @@ export const updateSession = (
 };
 
 type TAddReviewerToRequest = (
-  list: Array<types.TRequest>,
+  list: Array<types.TRequestProps>,
   reviewersAmount: number
 ) => (
-  requestsWithReviewers: Array<types.TRequestWithReviewers>,
-  request: types.TRequest,
+  requestsWithReviewers: Array<types.TRequest>,
+  request: types.TRequestProps,
   index: number
-) => Array<types.TRequestWithReviewers>;
+) => Array<types.TRequest>;
 
 export const addReviewerToRequest: TAddReviewerToRequest = (list, reviewersAmount) => {
   return (requestsWithReviewers, request, index) => {
@@ -35,7 +35,7 @@ export const addReviewerToRequest: TAddReviewerToRequest = (list, reviewersAmoun
       currentIndex = (list.length + currentIndex + 1) % list.length;
       reviewerOf.push({
         author: list[currentIndex].author,
-        score: null,
+        score: 0,
         state: null,
       });
     }
@@ -54,18 +54,18 @@ export const addReviewerToRequest: TAddReviewerToRequest = (list, reviewersAmoun
 };
 
 export const createReviewerDistribution = (
-  requests: Array<types.TRequest>,
+  requests: Array<types.TRequestProps>,
   reviewersAmount: number
-): Array<types.TRequestWithReviewers> => {
+): Array<types.TRequest> => {
   const shuffledList = shuffle(requests);
 
   return shuffledList.reduce(addReviewerToRequest(shuffledList, reviewersAmount), []);
 };
 
-const addRequest = (
-  requestList: Array<types.TRequest>,
+const prepareRequest = (
+  requestList: Array<types.TRequestProps>,
   request: types.TRemoteRequestData
-): Array<types.TRequest> => [
+): Array<types.TRequestProps> => [
   ...requestList,
   {
     id: request.id,
@@ -75,64 +75,63 @@ const addRequest = (
   },
 ];
 
-type TGetRequestList = (requestData: Array<types.TRemoteRequestData>) => Array<types.TRequest>;
+type TGetRequestList = (
+  remoteRequestData: Array<types.TRemoteRequestData>
+) => Array<types.TRequestProps>;
 
-export const getRequestList: TGetRequestList = (requestData) =>
-  requestData.filter((request) => request.state === 'PUBLISHED').reduce(addRequest, []);
+export const prepareRemoteRequestData: TGetRequestList = (remoteRequestData) =>
+  remoteRequestData.filter((request) => request.state === 'PUBLISHED').reduce(prepareRequest, []);
 
-// export const getReviewList: TGetRequestList = (requestData) =>
-//   requestData
-//     .filter((request) => request.state === 'PUBLISHED')
-//     .reduce(addRequest, []);
+export const getReviewerDataById = (
+  requestId: string,
+  author: string,
+  remoteReviewList: Array<types.TRemoteReviewsData>
+) => remoteReviewList.find((review) => review.requestId === requestId && review.author === author);
 
-export const addScoreToReviewer = (remoteReviewData: types.TRemoteReviewsData) => {
-  return (reviewers: Array<types.TReviewer>) =>
-    reviewers.map(
-      (reviewer): types.TReviewer => {
-        if (reviewer.author !== remoteReviewData.author) {
-          return reviewer;
-        }
-
-        return {
-          ...reviewer,
-          score: remoteReviewData.score,
-          state: remoteReviewData.state,
-        };
+export const updateReviewers = (
+  requestId: string,
+  reviewers: Array<types.TReviewer>,
+  remoteReviewList: Array<types.TRemoteReviewsData>
+) =>
+  reviewers.map(
+    (reviewer): types.TReviewer => {
+      const remoteReviewerData = getReviewerDataById(requestId, reviewer.author, remoteReviewList);
+      if (!remoteReviewerData) {
+        return reviewer;
       }
-    );
-};
 
-export const addScoreToRequest = (
-  request: types.TRequestWithReviewers,
-  reviewList: Array<types.TRemoteReviewsData>
-) => {
+      return {
+        ...reviewer,
+        score: remoteReviewerData.score,
+        state: remoteReviewerData.state,
+      };
+    }
+  );
+
+export const updateRequest = (request: types.TRequest, reviewList: Array<types.TReviewer>) => {
+  const withUpdatedReviewers: types.TRequest = { ...request, reviewerOf: reviewList };
   return reviewList.reduce(
-    (prevRequest, review): types.TRequestWithReviewers => {
-      const reviewerWithScore = addScoreToReviewer(review)(prevRequest.reviewerOf);
+    (prevRequest, review): types.TRequest => {
       const score =
         prevRequest.score === null
           ? review.score
-          : Math.round((prevRequest.score + review.score) / 2);
+          : Math.round(((prevRequest.score + review.score) as number) / 2);
 
       return {
         ...prevRequest,
-        reviewerOf: reviewerWithScore,
-        score: review.state !== 'ACCEPTED' ? prevRequest.score : score,
+        score: review.state === 'ACCEPTED' ? score : prevRequest.score,
       };
     },
-    { ...request }
+    { ...withUpdatedReviewers }
   );
 };
 
-export const getReviewersByRequestId = (id: string, reviewList: Array<types.TRemoteReviewsData>) =>
-  reviewList.filter((review) => review.requestId === id);
-
-export const addScoreToAllRequests = (
-  reviewList: Array<types.TRemoteReviewsData>,
-  requestList: Array<types.TRequestWithReviewers>
+export const updateAllRequests = (
+  remoteReviewList: Array<types.TRemoteReviewsData>,
+  requestList: Array<types.TRequest>
 ) => {
   return [...requestList].map((request) => {
-    const reviewers = getReviewersByRequestId(request.id, reviewList);
-    return addScoreToRequest(request, reviewers);
+    const updatedReviewers = updateReviewers(request.id, request.reviewerOf, remoteReviewList);
+    return updateRequest(request, updatedReviewers);
   });
 };

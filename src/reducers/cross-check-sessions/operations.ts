@@ -2,9 +2,8 @@ import * as actions from './actions';
 // Utils
 import {
   createReviewerDistribution,
-  getRequestList,
+  prepareRemoteRequestData,
   getSessionIndex,
-  addScoreToAllRequests,
 } from './utils';
 // Api
 import Api from '../../services/XCheckApi';
@@ -17,10 +16,10 @@ export const api = new Api();
 export type Thunk = TThunk<types.TAction, string>;
 
 export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
-  const requests: Array<types.TRemoteRequestData> = await api.reviewRequests.getByFilter(
+  const remoteRequests: Array<types.TRemoteRequestData> = await api.reviewRequests.getByFilter(
     `id=${id}`
   );
-  const requestList = getRequestList(requests);
+  const requestList = prepareRemoteRequestData(remoteRequests);
   const { crossCheckSession } = getState();
   const { sessions } = crossCheckSession;
   const currentSession = sessions[getSessionIndex(id, sessions)];

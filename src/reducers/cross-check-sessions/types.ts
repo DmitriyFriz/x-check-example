@@ -6,23 +6,13 @@ export const DELETE_SESSION = 'DELETE_SESSION';
 export const OPEN_REQUESTS_GATHERING = 'OPEN_REQUESTS_GATHERING';
 export const COMPLETE_CROSS_CHECK = 'COMPLETE_CROSS_CHECK';
 
-type TSessionState =
-  | 'DRAFT'
-  | 'REQUESTS_GATHERING'
-  | 'CROSS_CHECK'
-  | 'COMPLETED';
+type TSessionState = 'DRAFT' | 'REQUESTS_GATHERING' | 'CROSS_CHECK' | 'COMPLETED';
 
-type TReviewState =
-  | 'DRAFT'
-  | 'PUBLISHED'
-  | 'DISPUTED'
-  | 'ACCEPTED'
-  | 'REJECTED'
-  | null;
+type TReviewState = 'DRAFT' | 'PUBLISHED' | 'DISPUTED' | 'ACCEPTED' | 'REJECTED' | null;
 
 export type TRequestState = 'DRAFT' | 'PUBLISHED' | 'COMPLETED';
 
-export type TRequest = {
+export type TRequestProps = {
   id: string;
   author: string;
   score: number | null;
@@ -31,7 +21,7 @@ export type TRequest = {
 
 export type TReviewer = {
   author: string;
-  score: number | null;
+  score: number;
   state: TReviewState;
 };
 
@@ -49,7 +39,7 @@ export type TRemoteReviewsData = {
   state: TReviewState;
 };
 
-export type TRequestWithReviewers = TRequest & {
+export type TRequest = TRequestProps & {
   reviewerOf: Array<TReviewer>;
 };
 
@@ -64,7 +54,7 @@ export type TSessionData = {
   discardMaxScore: false;
   minReviewsAmount: number;
   desiredReviewersAmount: number;
-  attendees: Array<TRequestWithReviewers>;
+  attendees: Array<TRequest>;
 };
 
 export type TSetSessionsData = {
