@@ -22,6 +22,12 @@ interface ISessionHelper {
     remoteReviewList: Array<types.TRemoteReviewsData>,
     requestList: Array<types.TRequest>
   ) => Array<types.TRequest>;
+
+  setRequestsScores: (
+    requests: Array<types.TRequest>,
+    minReviewsAmount: number,
+    coefficient: number
+  ) => Array<types.TRequest>;
 }
 
 const sessionHelper: ISessionHelper = {
@@ -50,8 +56,15 @@ const sessionHelper: ISessionHelper = {
   updateAllRequests: (remoteReviewList, requestList) =>
     [...requestList].map((request) => {
       const updatedReviewers = updateReviewers(request.id, request.reviewerOf, remoteReviewList);
-      return updateRequest(request, updatedReviewers);
+      const updatedRequest = updateRequest(request, updatedReviewers);
+      updatedRequest.reviewsAmount = getReviewsAmount(request.author, remoteReviewList);
+
+      return updatedRequest;
     }),
+
+  setRequestsScores: (requests, minReviewsAmount, coefficient) => {
+    return requests.map(setRequestScore(minReviewsAmount, coefficient));
+  },
 };
 
 const prepareRequest = (
@@ -63,7 +76,8 @@ const prepareRequest = (
     id: request.id,
     author: request.author,
     score: null,
-    state: request.state,
+    state: 'PUBLISHED',
+    reviewsAmount: 0,
   },
 ];
 
@@ -101,7 +115,6 @@ const addReviewerToRequest: TAddReviewerToRequest = (list, reviewersAmount) => {
       ...requestsWithReviewers,
       {
         ...request,
-        score: null,
         reviewerOf: createReviewerOf(list, reviewersAmount, index),
       },
     ];
@@ -137,6 +150,9 @@ const updateReviewers = (
 const calculateScore = (requestScore: null | number, reviewScore: number) =>
   requestScore === null ? reviewScore : Math.round(((requestScore + reviewScore) as number) / 2);
 
+const getReviewsAmount = (author: string, remoteReviewList: Array<types.TRemoteReviewsData>) =>
+  remoteReviewList.filter((review) => review.author === author).length;
+
 const updateRequest = (request: types.TRequest, reviewList: Array<types.TReviewer>) => {
   const withUpdatedReviewers: types.TRequest = { ...request, reviewerOf: reviewList };
   return reviewList.reduce(
@@ -153,5 +169,21 @@ const updateRequest = (request: types.TRequest, reviewList: Array<types.TReviewe
   );
 };
 
+const setRequestScore = (minReviewsAmount: number, coefficient: number) => (
+  request: types.TRequest
+): types.TRequest => ({
+  ...request,
+  state: request.reviewsAmount < minReviewsAmount ? 'REJECTED' : 'COMPLETED',
+  score:
+    typeof request.score === 'number' ? Math.round(request.score * coefficient) : request.score,
+});
+
 export default sessionHelper;
-export { addReviewerToRequest, getReviewerDataById, updateReviewers, updateRequest };
+export {
+  addReviewerToRequest,
+  getReviewerDataById,
+  updateReviewers,
+  updateRequest,
+  getReviewsAmount,
+  setRequestScore,
+};

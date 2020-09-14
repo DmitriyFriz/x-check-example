@@ -7,6 +7,8 @@ import helper, {
   updateReviewers,
   updateRequest,
   getReviewerDataById,
+  getReviewsAmount,
+  setRequestScore,
 } from './utils';
 import { initCrossCheck, api } from './operations';
 import { TAppStateType } from '..';
@@ -108,13 +110,6 @@ const remoteReviewData: Array<types.TRemoteReviewsData> = [
     state: 'ACCEPTED',
   },
   {
-    id: 'rev-5',
-    requestId: 'rev-req-4',
-    author: 'boris-britva',
-    score: 45,
-    state: 'ACCEPTED',
-  },
-  {
     id: 'rev-6',
     requestId: 'rev-req-1',
     author: 'boris-britva',
@@ -156,26 +151,36 @@ jest.mock('lodash.shuffle', () =>
     {
       id: 'rev-req-2',
       author: 'john',
+      score: null,
+      reviewsAmount: 0,
       state: 'PUBLISHED',
     },
     {
       id: 'rev-req-1',
       author: 'jack',
+      score: null,
+      reviewsAmount: 0,
       state: 'PUBLISHED',
     },
     {
       id: 'rev-req-4',
       author: 'macKlein',
+      score: null,
+      reviewsAmount: 0,
       state: 'PUBLISHED',
     },
     {
       id: 'rev-req-3',
       author: 'boris-britva',
+      score: null,
+      reviewsAmount: 0,
       state: 'PUBLISHED',
     },
     {
       id: 'rev-req-5',
       author: 'rediska',
+      score: null,
+      reviewsAmount: 0,
       state: 'PUBLISHED',
     },
   ])
@@ -203,6 +208,13 @@ describe('Cross-check-session utils:', () => {
     expect(reviewer).toMatchSnapshot();
   });
 
+  it('getReviewsAmount should get reviews amount created by an author', () => {
+    const amount = getReviewsAmount('john', remoteReviewData);
+    const absentAuthorAmount = getReviewsAmount('vasya', remoteReviewData);
+    expect(amount).toBe(2);
+    expect(absentAuthorAmount).toBe(0);
+  });
+
   describe('createReviewerDistribution:', () => {
     let distribution;
 
@@ -227,6 +239,7 @@ describe('Cross-check-session utils:', () => {
       id: 'rev-req-2',
       score: null,
       state: 'PUBLISHED',
+      reviewsAmount: 0,
       reviewerOf: [
         {
           author: 'jack',
@@ -252,14 +265,20 @@ describe('Cross-check-session utils:', () => {
     });
   });
 
-  describe('updateAllRequests', () => {
-    it('should update all requests for cross-check session', () => {
-      const requests = helper.createReviewerDistribution(
-        helper.prepareRemoteRequestData(remoteRequestData),
-        2
-      );
-      const result = helper.updateAllRequests(remoteReviewData, requests);
+  describe('updateAllRequests and setRequestsScores', () => {
+    const requests = helper.createReviewerDistribution(
+      helper.prepareRemoteRequestData(remoteRequestData),
+      2
+    );
+    const result = helper.updateAllRequests(remoteReviewData, requests);
+
+    it('updateAllRequests should update all requests for cross-check session', () => {
       expect(result).toMatchSnapshot();
+    });
+
+    it('setRequestsScores should set score and state for all requests', () => {
+      const preparedRequest = helper.setRequestsScores(result, 2, 0.7);
+      expect(preparedRequest).toMatchSnapshot();
     });
   });
 });

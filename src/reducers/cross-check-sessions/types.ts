@@ -10,13 +10,14 @@ type TSessionState = 'DRAFT' | 'REQUESTS_GATHERING' | 'CROSS_CHECK' | 'COMPLETED
 
 type TReviewState = 'DRAFT' | 'PUBLISHED' | 'DISPUTED' | 'ACCEPTED' | 'REJECTED' | null;
 
-export type TRequestState = 'DRAFT' | 'PUBLISHED' | 'COMPLETED';
+export type TRequestState = 'PUBLISHED' | 'COMPLETED' | 'REJECTED';
 
 export type TRequestProps = {
   id: string;
   author: string;
   score: number | null;
   state: TRequestState;
+  reviewsAmount: number;
 };
 
 export type TReviewer = {
@@ -28,7 +29,7 @@ export type TReviewer = {
 export type TRemoteRequestData = {
   author: string;
   id: string;
-  state: TRequestState;
+  state: 'DRAFT' | 'PUBLISHED' | 'COMPLETED';
 };
 
 export type TRemoteReviewsData = {
