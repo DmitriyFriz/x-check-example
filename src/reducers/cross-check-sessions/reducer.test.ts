@@ -2,13 +2,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import reducer, { types, actions } from '.';
-import {
+import helper, {
   addReviewerToRequest,
-  createReviewerDistribution,
-  prepareRemoteRequestData,
-  getSessionIndex,
   updateReviewers,
-  updateAllRequests,
   updateRequest,
   getReviewerDataById,
 } from './utils';
@@ -188,12 +184,12 @@ jest.mock('lodash.shuffle', () =>
 describe('Cross-check-session utils:', () => {
   let requestList: Array<types.TRequestProps>;
   it('getSessionIndex should return an session index', () => {
-    const index = getSessionIndex('rss2020Q3Angular', data);
+    const index = helper.getSessionIndex('rss2020Q3Angular', data);
     expect(index).toBe(1);
   });
 
   it('prepareRemoteRequestData should filter data by state "PUBLISHED" and prepare each request', () => {
-    requestList = prepareRemoteRequestData(remoteRequestData);
+    requestList = helper.prepareRemoteRequestData(remoteRequestData);
     expect(requestList).toMatchSnapshot();
   });
 
@@ -202,16 +198,21 @@ describe('Cross-check-session utils:', () => {
     expect(reviewers).toMatchSnapshot();
   });
 
+  it('getReviewerDataById should get reviewer by id ("rev-req-5") and author-name ("john")', () => {
+    const reviewer = getReviewerDataById('rev-req-5', 'john', remoteReviewData);
+    expect(reviewer).toMatchSnapshot();
+  });
+
   describe('createReviewerDistribution:', () => {
     let distribution;
 
     it('should create reviewer distribution per 1 reviewers amount', () => {
-      distribution = createReviewerDistribution(requestList, 1);
+      distribution = helper.createReviewerDistribution(requestList, 1);
       expect(distribution).toMatchSnapshot();
     });
 
     it('should create reviewer distribution per 2 reviewers amount', () => {
-      distribution = createReviewerDistribution(requestList, 2);
+      distribution = helper.createReviewerDistribution(requestList, 2);
       expect(distribution).toMatchSnapshot();
     });
 
@@ -253,8 +254,11 @@ describe('Cross-check-session utils:', () => {
 
   describe('updateAllRequests', () => {
     it('should update all requests for cross-check session', () => {
-      const requests = createReviewerDistribution(prepareRemoteRequestData(remoteRequestData), 2);
-      const result = updateAllRequests(remoteReviewData, requests);
+      const requests = helper.createReviewerDistribution(
+        helper.prepareRemoteRequestData(remoteRequestData),
+        2
+      );
+      const result = helper.updateAllRequests(remoteReviewData, requests);
       expect(result).toMatchSnapshot();
     });
   });
@@ -291,7 +295,7 @@ describe('Cross-check-session reducer', () => {
       coefficient: 0.8,
     };
     const state = reducer({ ...initState, sessions: data }, actions.updateSession(inputData));
-    const indexOfUpdatedSession = getSessionIndex('rss2020Q3Angular', state.sessions);
+    const indexOfUpdatedSession = helper.getSessionIndex('rss2020Q3Angular', state.sessions);
 
     expect(state.sessions[indexOfUpdatedSession]).toEqual({
       ...state.sessions[indexOfUpdatedSession],
@@ -302,7 +306,7 @@ describe('Cross-check-session reducer', () => {
   it('deleteSession action should remove a session by id', () => {
     const id = 'rss2020Q3Angular';
     const state = reducer({ ...initState, sessions: data }, actions.deleteSession(id));
-    const index = getSessionIndex(id, state.sessions);
+    const index = helper.getSessionIndex(id, state.sessions);
 
     expect(index).toBe(-1);
     expect(state.sessions).toEqual(data.filter((session) => session.id !== id));
@@ -311,7 +315,7 @@ describe('Cross-check-session reducer', () => {
   it('openRequestGathering action should change session state to "REQUEST_GATHERING"', () => {
     const id = 'rss2020Q3react';
     const state = reducer({ ...initState, sessions: data }, actions.openRequestGathering(id));
-    const index = getSessionIndex(id, state.sessions);
+    const index = helper.getSessionIndex(id, state.sessions);
 
     expect(state.sessions[index].state).toBe('REQUESTS_GATHERING');
     expect(state.sessions[index]).toEqual({
@@ -362,7 +366,10 @@ describe('initCrossCheck operation', () => {
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: createReviewerDistribution(prepareRemoteRequestData(remoteRequestData), 2),
+    attendees: helper.createReviewerDistribution(
+      helper.prepareRemoteRequestData(remoteRequestData),
+      2
+    ),
   };
 
   it('session should send a request to get requests', () => {

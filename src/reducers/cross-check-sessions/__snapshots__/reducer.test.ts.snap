@@ -188,6 +188,36 @@ Array [
 ]
 `;
 
+exports[`Cross-check-session utils: getReviewerDataById should get reviewer by id ("rev-req-5") and author-name ("john") 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-4",
+  "requestId": "rev-req-5",
+  "score": 81,
+  "state": "ACCEPTED",
+}
+`;
+
+exports[`Cross-check-session utils: getReviewerDataById should get reviewer by id () and author-name 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-4",
+  "requestId": "rev-req-5",
+  "score": 81,
+  "state": "ACCEPTED",
+}
+`;
+
+exports[`Cross-check-session utils: getReviewerDataById should get reviewer by id and author-name 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-4",
+  "requestId": "rev-req-5",
+  "score": 81,
+  "state": "ACCEPTED",
+}
+`;
+
 exports[`Cross-check-session utils: prepareRemoteRequestData should filter data by state "PUBLISHED" and prepare each request 1`] = `
 Array [
   Object {

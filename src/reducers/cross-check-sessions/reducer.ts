@@ -1,5 +1,5 @@
 import * as types from './types';
-import { updateSession } from './utils';
+import helper from './utils';
 
 const initialState: types.TState = {
   selected: null,
@@ -31,7 +31,7 @@ const reducer = (state = initialState, action: types.TAction): TState => {
     case types.UPDATE_SESSION:
       return {
         ...state,
-        sessions: updateSession(action.payload.data, state.sessions),
+        sessions: helper.updateSession(action.payload.data, state.sessions),
       };
 
     case types.DELETE_SESSION:
@@ -45,7 +45,7 @@ const reducer = (state = initialState, action: types.TAction): TState => {
     case types.OPEN_REQUESTS_GATHERING:
       return {
         ...state,
-        sessions: updateSession(
+        sessions: helper.updateSession(
           {
             id: action.payload.id,
             state: 'REQUESTS_GATHERING',

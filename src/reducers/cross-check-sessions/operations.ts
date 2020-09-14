@@ -1,10 +1,6 @@
 import * as actions from './actions';
 // Utils
-import {
-  createReviewerDistribution,
-  prepareRemoteRequestData,
-  getSessionIndex,
-} from './utils';
+import helper from './utils';
 // Api
 import Api from '../../services/XCheckApi';
 // Types
@@ -19,11 +15,11 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
   const remoteRequests: Array<types.TRemoteRequestData> = await api.reviewRequests.getByFilter(
     `id=${id}`
   );
-  const requestList = prepareRemoteRequestData(remoteRequests);
+  const requestList = helper.prepareRemoteRequestData(remoteRequests);
   const { crossCheckSession } = getState();
   const { sessions } = crossCheckSession;
-  const currentSession = sessions[getSessionIndex(id, sessions)];
-  const distribution = createReviewerDistribution(
+  const currentSession = sessions[helper.getSessionIndex(id, sessions)];
+  const distribution = helper.createReviewerDistribution(
     requestList,
     currentSession.desiredReviewersAmount
   );
