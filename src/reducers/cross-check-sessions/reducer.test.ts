@@ -9,7 +9,7 @@ import helper, {
   getReviewerDataById,
   getReviewsAmount,
 } from './utils';
-import { initCrossCheck, api, completeCrossCheck } from './operations';
+import { initCrossCheck, api, completeCrossCheck, updateRemoteData } from './operations';
 import { TAppStateType } from '..';
 
 const initState: types.TState = {
@@ -355,15 +355,16 @@ type MockStore = { crossCheckSession: types.TState };
 type DispatchExts = ThunkDispatch<TAppStateType, void, types.TAction>;
 const middleWares = [thunk];
 const mockStore = configureMockStore<MockStore, DispatchExts>(middleWares);
-const spyUpdate = jest.spyOn(api.crossChecks, 'update');
 
 describe('initCrossCheck operation', () => {
   let action: types.TUpdateSession;
+  const spyUpdate = jest.spyOn(api.crossChecks, 'updateById');
+  const spyGetByFilter = jest.spyOn(api.reviewRequests, 'getByFilter');
 
   beforeEach(async () => {
     fetchMock.getOnce(/id=rss2020Q3react/, {
       status: 200,
-      body: JSON.stringify([[remoteRequestData]]),
+      body: JSON.stringify([remoteRequestData]),
     });
 
     fetchMock.putOnce(/rss2020Q3react/, {
@@ -375,10 +376,11 @@ describe('initCrossCheck operation', () => {
     [action] = store.getActions();
   });
 
-  afterEach(() => fetchMock.reset());
-
-  const spyGetByFilter = jest.spyOn(api.reviewRequests, 'getByFilter');
-  // const spyUpdate = jest.spyOn(api.crossChecks, 'update');
+  afterEach(() => {
+    fetchMock.reset();
+    spyUpdate.mockClear();
+    spyGetByFilter.mockClear();
+  });
 
   const id = 'rss2020Q3react';
   const store = mockStore({
@@ -415,13 +417,15 @@ describe('initCrossCheck operation', () => {
 
 describe('completeCrossCheck operation', () => {
   let action: types.TUpdateSession;
+  const spyUpdate = jest.spyOn(api.crossChecks, 'updateById');
+  const spyGetByFilter = jest.spyOn(api.reviews, 'getByFilter');
 
   beforeEach(async () => {
     fetchMock.getOnce(/id=rss2020Q3react/, {
       status: 200,
-      body: JSON.stringify([[remoteReviewData]]),
+      body: JSON.stringify([remoteReviewData]),
     });
-    // console.log(updatedData)
+
     fetchMock.putOnce(/rss2020Q3react/, {
       status: 200,
       body: JSON.stringify(updatedData),
@@ -433,9 +437,9 @@ describe('completeCrossCheck operation', () => {
 
   afterEach(() => {
     fetchMock.reset();
+    spyUpdate.mockClear();
+    spyGetByFilter.mockClear();
   });
-
-  const spyGetByFilter = jest.spyOn(api.reviews, 'getByFilter');
 
   const id = 'rss2020Q3react';
   const preparedRequestData = helper.prepareRemoteRequestData(remoteRequestData.requests);
@@ -481,5 +485,40 @@ describe('completeCrossCheck operation', () => {
   it('should send a request to update a session', () => {
     expect(spyUpdate).toBeCalled();
     expect(spyUpdate).toBeCalledWith('rss2020Q3react', updatedData);
+  });
+});
+
+describe('updateRemoteData:', () => {
+  const spyUpdate = jest.spyOn(api.crossChecks, 'updateById');
+
+  afterEach(() => {
+    spyUpdate.mockClear();
+  });
+
+  const id = 'rss2020Q3react';
+  const store = mockStore({
+    crossCheckSession: {
+      sessions: [...data],
+      selected: id,
+    },
+  });
+
+  it('should be called api update method', () => {
+    store.dispatch(updateRemoteData(null));
+    expect(spyUpdate).toBeCalledTimes(1);
+  });
+
+  it('should send a data to a server', () => {
+    store.dispatch(updateRemoteData(null));
+    expect(spyUpdate).toBeCalledWith(
+      id,
+      helper.getSessionById(id, store.getState().crossCheckSession)
+    );
+  });
+
+  it('should dispatch action', () => {
+    const secondId = 'rss2020Q3Angular';
+    store.dispatch(updateRemoteData(actions.selectSession(secondId)));
+    expect(store.getActions()[0].type).toBe('SELECT_SESSION');
   });
 });

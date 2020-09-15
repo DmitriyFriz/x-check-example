@@ -38,11 +38,7 @@ class XCheckApiService {
     return options;
   };
 
-  private createRequest = async <T>({
-    method,
-    path,
-    data,
-  }: TCreateRequestProps<T>) => {
+  private createRequest = async <T>({ method, path, data }: TCreateRequestProps<T>) => {
     const options = this.createOptions({ method, data });
     const request = await fetch(`${this.root}${path}`, options);
     const response = await request.json();
@@ -53,29 +49,25 @@ class XCheckApiService {
   private createDomainMethods = (url: string) => ({
     get: () => this.createRequest({ method: 'GET', path: `/${url}` }),
 
-    getById: (id: string) =>
-      this.createRequest({ method: 'GET', path: `/${url}?id=${id}` }),
+    getById: (id: string) => this.createRequest({ method: 'GET', path: `/${url}?id=${id}` }),
 
     getByFilter: (filter: string) =>
       this.createRequest({ method: 'GET', path: `/${url}?${filter}` }),
 
-    create: <T>(data: T) =>
-      this.createRequest({ method: 'POST', path: `/${url}`, data }),
+    create: <T>(data: T) => this.createRequest({ method: 'POST', path: `/${url}`, data }),
 
-    update: <T>(id: string, data: T) =>
+    updateById: <T>(id: string, data: T) =>
       this.createRequest({
         method: 'PUT',
         path: `/${url}/${id}`,
         data,
       }),
 
-    delete: (id: string) =>
-      this.createRequest({ method: 'DELETE', path: `/${url}/${id}` }),
+    delete: (id: string) => this.createRequest({ method: 'DELETE', path: `/${url}/${id}` }),
   });
 
   auth = {
-    signIn: async <T>(data: T) =>
-      this.createRequest({ method: 'POST', path: '/user', data }),
+    signIn: async <T>(data: T) => this.createRequest({ method: 'POST', path: '/user', data }),
   };
 
   tasks = this.createDomainMethods(this.urls.tasks);

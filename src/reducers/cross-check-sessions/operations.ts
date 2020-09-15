@@ -27,7 +27,7 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
 
   dispatch(actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution }));
 
-  await api.crossChecks.update<types.TSessionData>(id, {
+  await api.crossChecks.updateById<types.TSessionData>(id, {
     ...currentSession,
     state: 'CROSS_CHECK',
     attendees: distribution,
@@ -42,17 +42,38 @@ export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
   const session = helper.getSessionById(id, getState().crossCheckSession);
   const [{ reviews }] = remoteReviews;
 
-  session.attendees = helper.updateAllRequests(reviews, session.attendees);
-  session.attendees = helper.setRequestsScores(
-    session.attendees,
+  const updated = helper.updateAllRequests(reviews, session.attendees);
+  const withScores = helper.setRequestsScores(
+    updated,
     session.minReviewsAmount,
     session.coefficient
   );
 
-  dispatch(actions.updateSession({ id, state: 'COMPLETED', attendees: session.attendees }));
+  dispatch(actions.updateSession({ id, state: 'COMPLETED', attendees: withScores }));
 
-  await api.crossChecks.update<types.TSessionData>(id, {
+  await api.crossChecks.updateById<types.TSessionData>(id, {
     ...session,
     state: 'COMPLETED',
+    attendees: withScores,
   });
+};
+
+export const updateRemoteData: TThunk<types.TAction, types.TAction | null> = (
+  action = null
+) => async (dispatch, getState) => {
+  if (action) {
+    dispatch(action);
+  }
+
+  const { crossCheckSession } = getState();
+  const { selected } = crossCheckSession;
+
+  if (!selected) {
+    return;
+  }
+
+  await api.crossChecks.updateById<types.TSessionData>(
+    selected,
+    helper.getSessionById(selected, crossCheckSession)
+  );
 };
