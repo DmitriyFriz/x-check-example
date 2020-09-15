@@ -8,9 +8,8 @@ import helper, {
   updateRequest,
   getReviewerDataById,
   getReviewsAmount,
-  setRequestScore,
 } from './utils';
-import { initCrossCheck, api } from './operations';
+import { initCrossCheck, api, completeCrossCheck } from './operations';
 import { TAppStateType } from '..';
 
 const initState: types.TState = {
@@ -28,7 +27,7 @@ const data: Array<types.TSessionData> = [
     endDate: 12225121,
     discardMinScore: true,
     discardMaxScore: false,
-    minReviewsAmount: 1,
+    minReviewsAmount: 2,
     desiredReviewersAmount: 2,
     attendees: [],
   },
@@ -47,104 +46,108 @@ const data: Array<types.TSessionData> = [
   },
 ];
 
-const remoteRequestData: Array<types.TRemoteRequestData> = [
-  {
-    id: 'rev-req-1',
-    author: 'jack',
-    state: 'PUBLISHED',
-  },
-  {
-    id: 'rev-req-2',
-    author: 'john',
-    state: 'PUBLISHED',
-  },
-  {
-    id: 'rev-req-3',
-    author: 'boris-britva',
-    state: 'PUBLISHED',
-  },
-  {
-    id: 'rev-req-4',
-    author: 'macKlein',
-    state: 'PUBLISHED',
-  },
-  {
-    id: 'rev-req-5',
-    author: 'rediska',
-    state: 'PUBLISHED',
-  },
-  {
-    id: 'rev-req-6',
-    author: 'rabbit',
-    state: 'DRAFT',
-  },
-];
+const remoteRequestData: { requests: Array<types.TRemoteRequestData> } = {
+  requests: [
+    {
+      id: 'rev-req-1',
+      author: 'jack',
+      state: 'PUBLISHED',
+    },
+    {
+      id: 'rev-req-2',
+      author: 'john',
+      state: 'PUBLISHED',
+    },
+    {
+      id: 'rev-req-3',
+      author: 'boris-britva',
+      state: 'PUBLISHED',
+    },
+    {
+      id: 'rev-req-4',
+      author: 'macKlein',
+      state: 'PUBLISHED',
+    },
+    {
+      id: 'rev-req-5',
+      author: 'rediska',
+      state: 'PUBLISHED',
+    },
+    {
+      id: 'rev-req-6',
+      author: 'rabbit',
+      state: 'DRAFT',
+    },
+  ],
+};
 
-const remoteReviewData: Array<types.TRemoteReviewsData> = [
-  {
-    id: 'rev-1',
-    requestId: 'rev-req-2',
-    author: 'jack',
-    score: 54,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-2',
-    requestId: 'rev-req-5',
-    author: 'jack',
-    score: 53,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-3',
-    requestId: 'rev-req-3',
-    author: 'john',
-    score: 88,
-    state: 'DISPUTED',
-  },
-  {
-    id: 'rev-4',
-    requestId: 'rev-req-5',
-    author: 'john',
-    score: 81,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-6',
-    requestId: 'rev-req-1',
-    author: 'boris-britva',
-    score: 48,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-7',
-    requestId: 'rev-req-1',
-    author: 'macKlein',
-    score: 57,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-8',
-    requestId: 'rev-req-2',
-    author: 'macKlein',
-    score: 51,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-9',
-    requestId: 'rev-req-3',
-    author: 'rediska',
-    score: 80,
-    state: 'ACCEPTED',
-  },
-  {
-    id: 'rev-10',
-    requestId: 'rev-req-4',
-    author: 'rediska',
-    score: 89,
-    state: 'ACCEPTED',
-  },
-];
+const remoteReviewData: { reviews: Array<types.TRemoteReviewsData> } = {
+  reviews: [
+    {
+      id: 'rev-1',
+      requestId: 'rev-req-2',
+      author: 'jack',
+      score: 54,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-2',
+      requestId: 'rev-req-5',
+      author: 'jack',
+      score: 53,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-3',
+      requestId: 'rev-req-3',
+      author: 'john',
+      score: 88,
+      state: 'DISPUTED',
+    },
+    {
+      id: 'rev-4',
+      requestId: 'rev-req-5',
+      author: 'john',
+      score: 81,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-6',
+      requestId: 'rev-req-1',
+      author: 'boris-britva',
+      score: 48,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-7',
+      requestId: 'rev-req-1',
+      author: 'macKlein',
+      score: 57,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-8',
+      requestId: 'rev-req-2',
+      author: 'macKlein',
+      score: 51,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-9',
+      requestId: 'rev-req-3',
+      author: 'rediska',
+      score: 80,
+      state: 'ACCEPTED',
+    },
+    {
+      id: 'rev-10',
+      requestId: 'rev-req-4',
+      author: 'rediska',
+      score: 89,
+      state: 'ACCEPTED',
+    },
+  ],
+};
 
 jest.mock('lodash.shuffle', () =>
   jest.fn().mockReturnValue([
@@ -194,7 +197,7 @@ describe('Cross-check-session utils:', () => {
   });
 
   it('prepareRemoteRequestData should filter data by state "PUBLISHED" and prepare each request', () => {
-    requestList = helper.prepareRemoteRequestData(remoteRequestData);
+    requestList = helper.prepareRemoteRequestData(remoteRequestData.requests);
     expect(requestList).toMatchSnapshot();
   });
 
@@ -204,13 +207,13 @@ describe('Cross-check-session utils:', () => {
   });
 
   it('getReviewerDataById should get reviewer by id ("rev-req-5") and author-name ("john")', () => {
-    const reviewer = getReviewerDataById('rev-req-5', 'john', remoteReviewData);
+    const reviewer = getReviewerDataById('rev-req-5', 'john', remoteReviewData.reviews);
     expect(reviewer).toMatchSnapshot();
   });
 
   it('getReviewsAmount should get reviews amount created by an author', () => {
-    const amount = getReviewsAmount('john', remoteReviewData);
-    const absentAuthorAmount = getReviewsAmount('vasya', remoteReviewData);
+    const amount = getReviewsAmount('john', remoteReviewData.reviews);
+    const absentAuthorAmount = getReviewsAmount('vasya', remoteReviewData.reviews);
     expect(amount).toBe(2);
     expect(absentAuthorAmount).toBe(0);
   });
@@ -229,11 +232,11 @@ describe('Cross-check-session utils:', () => {
     });
 
     it('reviewers without state PUBLISHED should not be added', () => {
-      expect(distribution.length).toBe(remoteRequestData.length - 1);
+      expect(distribution.length).toBe(remoteRequestData.requests.length - 1);
     });
   });
 
-  describe('updateRequest: ', () => {
+  describe('updateRequest:', () => {
     const request: types.TRequest = {
       author: 'john',
       id: 'rev-req-2',
@@ -254,7 +257,11 @@ describe('Cross-check-session utils:', () => {
       ],
     };
 
-    const updatedReviewers = updateReviewers('rev-req-2', request.reviewerOf, remoteReviewData);
+    const updatedReviewers = updateReviewers(
+      'rev-req-2',
+      request.reviewerOf,
+      remoteReviewData.reviews
+    );
     it('updateReviewers should update reviewers data of request', () => {
       expect(updatedReviewers).toMatchSnapshot();
     });
@@ -267,10 +274,10 @@ describe('Cross-check-session utils:', () => {
 
   describe('updateAllRequests and setRequestsScores', () => {
     const requests = helper.createReviewerDistribution(
-      helper.prepareRemoteRequestData(remoteRequestData),
+      helper.prepareRemoteRequestData(remoteRequestData.requests),
       2
     );
-    const result = helper.updateAllRequests(remoteReviewData, requests);
+    const result = helper.updateAllRequests(remoteReviewData.reviews, requests);
 
     it('updateAllRequests should update all requests for cross-check session', () => {
       expect(result).toMatchSnapshot();
@@ -344,13 +351,19 @@ describe('Cross-check-session reducer', () => {
   });
 });
 
+type MockStore = { crossCheckSession: types.TState };
+type DispatchExts = ThunkDispatch<TAppStateType, void, types.TAction>;
+const middleWares = [thunk];
+const mockStore = configureMockStore<MockStore, DispatchExts>(middleWares);
+const spyUpdate = jest.spyOn(api.crossChecks, 'update');
+
 describe('initCrossCheck operation', () => {
   let action: types.TUpdateSession;
 
   beforeEach(async () => {
     fetchMock.getOnce(/id=rss2020Q3react/, {
       status: 200,
-      body: JSON.stringify(remoteRequestData),
+      body: JSON.stringify([[remoteRequestData]]),
     });
 
     fetchMock.putOnce(/rss2020Q3react/, {
@@ -362,18 +375,10 @@ describe('initCrossCheck operation', () => {
     [action] = store.getActions();
   });
 
-  afterEach(() => {
-    fetchMock.restore();
-  });
+  afterEach(() => fetchMock.reset());
 
-  type MockStore = { crossCheckSession: types.TState };
-  type DispatchExts = ThunkDispatch<TAppStateType, void, types.TAction>;
-
-  const middleWares = [thunk];
-  const mockStore = configureMockStore<MockStore, DispatchExts>(middleWares);
-
-  const spyUpdate = jest.spyOn(api.crossChecks, 'update');
   const spyGetByFilter = jest.spyOn(api.reviewRequests, 'getByFilter');
+  // const spyUpdate = jest.spyOn(api.crossChecks, 'update');
 
   const id = 'rss2020Q3react';
   const store = mockStore({
@@ -382,13 +387,11 @@ describe('initCrossCheck operation', () => {
       selected: id,
     },
   });
+  const { requests } = remoteRequestData;
   const updatedData: types.TSessionData = {
     ...data[0],
     state: 'CROSS_CHECK',
-    attendees: helper.createReviewerDistribution(
-      helper.prepareRemoteRequestData(remoteRequestData),
-      2
-    ),
+    attendees: helper.createReviewerDistribution(helper.prepareRemoteRequestData(requests), 2),
   };
 
   it('session should send a request to get requests', () => {
@@ -402,6 +405,77 @@ describe('initCrossCheck operation', () => {
 
   it('session should have a reviewers distribution', () => {
     expect(action.payload.data.attendees).toEqual(updatedData.attendees);
+  });
+
+  it('should send a request to update a session', () => {
+    expect(spyUpdate).toBeCalled();
+    expect(spyUpdate).toBeCalledWith('rss2020Q3react', updatedData);
+  });
+});
+
+describe('completeCrossCheck operation', () => {
+  let action: types.TUpdateSession;
+
+  beforeEach(async () => {
+    fetchMock.getOnce(/id=rss2020Q3react/, {
+      status: 200,
+      body: JSON.stringify([[remoteReviewData]]),
+    });
+    // console.log(updatedData)
+    fetchMock.putOnce(/rss2020Q3react/, {
+      status: 200,
+      body: JSON.stringify(updatedData),
+    });
+
+    await store.dispatch(completeCrossCheck(id));
+    [action] = store.getActions();
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  const spyGetByFilter = jest.spyOn(api.reviews, 'getByFilter');
+
+  const id = 'rss2020Q3react';
+  const preparedRequestData = helper.prepareRemoteRequestData(remoteRequestData.requests);
+  const requests = helper.createReviewerDistribution(preparedRequestData, 2);
+  const store = mockStore({
+    crossCheckSession: {
+      sessions: [
+        {
+          ...data[0],
+          attendees: requests,
+        },
+      ],
+      selected: id,
+    },
+  });
+
+  const [session] = store.getState().crossCheckSession.sessions;
+  const updatedRequests = helper.updateAllRequests(remoteReviewData.reviews, requests);
+  const requestWithScores = helper.setRequestsScores(
+    updatedRequests,
+    session.minReviewsAmount,
+    session.coefficient
+  );
+  const updatedData: types.TSessionData = {
+    ...session,
+    state: 'COMPLETED',
+    attendees: requestWithScores,
+  };
+
+  it('session should send a request to get reviews', () => {
+    expect(spyGetByFilter).toBeCalled();
+    expect(spyGetByFilter).toBeCalledWith(`id=${id}`);
+  });
+
+  it('session should have a state "COMPLETED"', () => {
+    expect(action.payload.data.state).toBe('COMPLETED');
+  });
+
+  it('session should have requests with scores', () => {
+    expect(action.payload.data.attendees).toMatchSnapshot();
   });
 
   it('should send a request to update a session', () => {

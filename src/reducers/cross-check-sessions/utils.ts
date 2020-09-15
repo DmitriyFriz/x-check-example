@@ -4,6 +4,8 @@ import * as types from './types';
 interface ISessionHelper {
   getSessionIndex: (id: string, data: Array<{ id: string }>) => number;
 
+  getSessionById: (id: string, state: types.TState) => types.TSessionData;
+
   updateSession: (
     inputData: types.TUpdatedData,
     sessionData: Array<types.TSessionData>
@@ -32,6 +34,12 @@ interface ISessionHelper {
 
 const sessionHelper: ISessionHelper = {
   getSessionIndex: (id, data) => data.findIndex((session) => session?.id === id),
+
+  getSessionById(id, state) {
+    const { sessions } = state;
+
+    return sessions[this.getSessionIndex(id, sessions)];
+  },
 
   updateSession(inputData, sessionData) {
     const updatedData = [...sessionData];

@@ -4,7 +4,11 @@
       "id": "simple-task-v1",
       "author": "cardamo",
       "state": "DRAFT",
-      "categoriesOrder": ["Basic Scope", "Extra Scope", "Fines"],
+      "categoriesOrder": [
+        "Basic Scope",
+        "Extra Scope",
+        "Fines"
+      ],
       "items": [
         {
           "id": "basic_p1",
@@ -43,29 +47,12 @@
       "endDate": "2020-07-14",
       "discardMinScore": true,
       "discardMaxScore": false,
-      "minReiewsAmount": 1,
+      "minReviewsAmount": 2,
       "desiredReviewersAmount": 2,
-      "attendees": [
-        {
-          "id": "rev-req-1",
-          "author": "ButterBrot777",
-          "score": 74,
-          "reviewerOf": [
-            {
-              "author": "torvalds",
-              "score": 60
-            },
-            {
-              "author": "cardamo",
-              "score": 83
-            }
-          ]
-        }
-      ]
+      "attendees": []
     }
   ],
   "review-requests": [
-    [
       {
         "id": "rss2020Q3react-xcheck",
         "requests": [
@@ -95,7 +82,6 @@
           }
         ]
       }
-    ]
   ],
   "reviews": [
     {

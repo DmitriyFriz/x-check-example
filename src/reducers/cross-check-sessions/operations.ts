@@ -12,21 +12,20 @@ export const api = new Api();
 export type Thunk = TThunk<types.TAction, string>;
 
 export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
-  const remoteRequests: Array<types.TRemoteRequestData> = await api.reviewRequests.getByFilter(
-    `id=${id}`
-  );
-  const requestList = helper.prepareRemoteRequestData(remoteRequests);
-  const { crossCheckSession } = getState();
-  const { sessions } = crossCheckSession;
-  const currentSession = sessions[helper.getSessionIndex(id, sessions)];
+  const remoteRequests: Array<{
+    requests: Array<types.TRemoteRequestData>;
+  }> = await api.reviewRequests.getByFilter(`id=${id}`);
+
+  const [{ requests }] = remoteRequests;
+  const requestList = helper.prepareRemoteRequestData(requests);
+  const currentSession = helper.getSessionById(id, getState().crossCheckSession);
+
   const distribution = helper.createReviewerDistribution(
     requestList,
     currentSession.desiredReviewersAmount
   );
 
-  dispatch(
-    actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution })
-  );
+  dispatch(actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution }));
 
   await api.crossChecks.update<types.TSessionData>(id, {
     ...currentSession,
@@ -35,23 +34,25 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
   });
 };
 
-// export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
-//   const reviews: Array<types.TRemoteReviewsData> = await api.reviews.getByFilter(
-//     `id=${id}`
-//   );
-//   const acceptedReviews = reviews.filter((review) => review.)
-//   const { crossCheckSession } = getState();
-//   const { sessions } = crossCheckSession;
-//   const currentSession = sessions[getSessionIndex(id, sessions)];
-//   const requestWithScore = addScoreToAllRequests(reviews);
+export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
+  const remoteReviews: Array<{
+    reviews: Array<types.TRemoteReviewsData>;
+  }> = await api.reviews.getByFilter(`id=${id}`);
 
-//   dispatch(
-//     actions.updateSession({ id, state: 'CROSS_CHECK', attendees: distribution })
-//   );
+  const session = helper.getSessionById(id, getState().crossCheckSession);
+  const [{ reviews }] = remoteReviews;
 
-//   await api.crossChecks.update<types.TSessionData>(id, {
-//     ...currentSession,
-//     state: 'CROSS_CHECK',
-//     attendees: distribution,
-//   });
-// };
+  session.attendees = helper.updateAllRequests(reviews, session.attendees);
+  session.attendees = helper.setRequestsScores(
+    session.attendees,
+    session.minReviewsAmount,
+    session.coefficient
+  );
+
+  dispatch(actions.updateSession({ id, state: 'COMPLETED', attendees: session.attendees }));
+
+  await api.crossChecks.update<types.TSessionData>(id, {
+    ...session,
+    state: 'COMPLETED',
+  });
+};
