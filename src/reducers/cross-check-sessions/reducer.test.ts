@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import fetchMock from 'fetch-mock';
-import reducer, { types, actions } from '.';
+import reducer, { types, actions, selectors } from '.';
 import helper, {
   addReviewerToRequest,
   updateReviewers,
@@ -512,7 +512,7 @@ describe('updateRemoteData:', () => {
     store.dispatch(updateRemoteData(null));
     expect(spyUpdate).toBeCalledWith(
       id,
-      helper.getSessionById(id, store.getState().crossCheckSession)
+      helper.getSessionById(id, store.getState().crossCheckSession.sessions)
     );
   });
 
@@ -520,5 +520,34 @@ describe('updateRemoteData:', () => {
     const secondId = 'rss2020Q3Angular';
     store.dispatch(updateRemoteData(actions.selectSession(secondId)));
     expect(store.getActions()[0].type).toBe('SELECT_SESSION');
+  });
+});
+
+describe('Cross-check-session selectors', () => {
+  it('currentSessionSelector should return current session', () => {
+    const id = 'rss2020Q3react';
+    const store = mockStore({
+      crossCheckSession: {
+        sessions: [...data],
+        selected: id,
+      },
+    });
+
+    const session = selectors.currentSessionSelector(store.getState() as TAppStateType);
+    expect(session).toMatchSnapshot();
+
+    const repeatedSession = selectors.currentSessionSelector(store.getState() as TAppStateType);
+    expect(session).toBe(repeatedSession);
+  });
+
+  it('currentSessionSelector should return null if a session is not selected', () => {
+    const store = mockStore({
+      crossCheckSession: {
+        sessions: [...data],
+        selected: null,
+      },
+    });
+    const session = selectors.currentSessionSelector(store.getState() as TAppStateType);
+    expect(session).toBeNull();
   });
 });

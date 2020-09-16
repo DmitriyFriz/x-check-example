@@ -4,7 +4,10 @@ import * as types from './types';
 interface ISessionHelper {
   getSessionIndex: (id: string, data: Array<{ id: string }>) => number;
 
-  getSessionById: (id: string, state: types.TState) => types.TSessionData;
+  getSessionById: (
+    id: string | null,
+    sessions: Array<types.TSessionData>
+  ) => types.TSessionData | null;
 
   updateSession: (
     inputData: types.TUpdatedData,
@@ -33,12 +36,10 @@ interface ISessionHelper {
 }
 
 const sessionHelper: ISessionHelper = {
-  getSessionIndex: (id, data) => data.findIndex((session) => session?.id === id),
+  getSessionIndex: (id, data) => data.findIndex((session) => session.id === id),
 
-  getSessionById(id, state) {
-    const { sessions } = state;
-
-    return sessions[this.getSessionIndex(id, sessions)];
+  getSessionById(id, sessions) {
+    return id ? sessions[this.getSessionIndex(id, sessions)] : null;
   },
 
   updateSession(inputData, sessionData) {

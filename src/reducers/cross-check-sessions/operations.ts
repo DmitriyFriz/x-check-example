@@ -12,13 +12,17 @@ export const api = new Api();
 export type Thunk = TThunk<types.TAction, string>;
 
 export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
+  const currentSession = helper.getSessionById(id, getState().crossCheckSession.sessions);
+  if (!currentSession) {
+    return;
+  }
+
   const remoteRequests: Array<{
     requests: Array<types.TRemoteRequestData>;
   }> = await api.reviewRequests.getByFilter(`id=${id}`);
 
   const [{ requests }] = remoteRequests;
   const requestList = helper.prepareRemoteRequestData(requests);
-  const currentSession = helper.getSessionById(id, getState().crossCheckSession);
 
   const distribution = helper.createReviewerDistribution(
     requestList,
@@ -35,11 +39,15 @@ export const initCrossCheck: Thunk = (id) => async (dispatch, getState) => {
 };
 
 export const completeCrossCheck: Thunk = (id) => async (dispatch, getState) => {
+  const session = helper.getSessionById(id, getState().crossCheckSession.sessions);
+  if (!session) {
+    return;
+  }
+
   const remoteReviews: Array<{
     reviews: Array<types.TRemoteReviewsData>;
   }> = await api.reviews.getByFilter(`id=${id}`);
 
-  const session = helper.getSessionById(id, getState().crossCheckSession);
   const [{ reviews }] = remoteReviews;
 
   const updated = helper.updateAllRequests(reviews, session.attendees);
@@ -67,13 +75,14 @@ export const updateRemoteData: TThunk<types.TAction, types.TAction | null> = (
 
   const { crossCheckSession } = getState();
   const { selected } = crossCheckSession;
+  const session = helper.getSessionById(selected, crossCheckSession.sessions);
 
-  if (!selected) {
+  if (!session || !selected) {
     return;
   }
 
   await api.crossChecks.updateById<types.TSessionData>(
     selected,
-    helper.getSessionById(selected, crossCheckSession)
+    session
   );
 };

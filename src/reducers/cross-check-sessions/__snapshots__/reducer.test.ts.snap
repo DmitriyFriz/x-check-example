@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Cross-check-session selectors currentSessionSelector should return current session 1`] = `
+Object {
+  "attendees": Array [],
+  "coefficient": 0.7,
+  "desiredReviewersAmount": 2,
+  "discardMaxScore": false,
+  "discardMinScore": true,
+  "endDate": 12225121,
+  "id": "rss2020Q3react",
+  "minReviewsAmount": 2,
+  "startDate": 12222121,
+  "state": "DRAFT",
+  "taskId": "simple-task-v1",
+}
+`;
+
 exports[`Cross-check-session utils: addReviewerToRequest should add reviewers to an attendee 1`] = `
 Array [
   Object {
