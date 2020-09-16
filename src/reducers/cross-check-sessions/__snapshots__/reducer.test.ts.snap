@@ -1,0 +1,603 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cross-check-session selectors currentSessionSelector should return current session 1`] = `
+Object {
+  "attendees": Array [],
+  "coefficient": 0.7,
+  "desiredReviewersAmount": 2,
+  "discardMaxScore": false,
+  "discardMinScore": true,
+  "endDate": 12225121,
+  "id": "rss2020Q3react",
+  "minReviewsAmount": 2,
+  "startDate": 12222121,
+  "state": "DRAFT",
+  "taskId": "simple-task-v1",
+}
+`;
+
+exports[`Cross-check-session utils: addReviewerToRequest should add reviewers to an attendee 1`] = `
+Array [
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: createReviewerDistribution: should create reviewer distribution per 1 reviewers amount 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: createReviewerDistribution: should create reviewer distribution per 2 reviewers amount 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "macKlein",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "rediska",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "john",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "jack",
+        "score": 0,
+        "state": null,
+      },
+    ],
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: getReviewerDataById should get reviewer by id ("rev-req-5") and author-name ("john") 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-4",
+  "requestId": "rev-req-5",
+  "score": 81,
+  "state": "ACCEPTED",
+}
+`;
+
+exports[`Cross-check-session utils: prepareRemoteRequestData should filter data by state "PUBLISHED" and prepare each request 1`] = `
+Array [
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewsAmount": 0,
+    "score": null,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: updateAllRequests and setRequestsScores setRequestsScores should set score and state for all requests 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 54,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "macKlein",
+        "score": 51,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 37,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 57,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 48,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 37,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "rediska",
+        "score": 89,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 62,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 80,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "john",
+        "score": 88,
+        "state": "DISPUTED",
+      },
+    ],
+    "reviewsAmount": 1,
+    "score": 56,
+    "state": "REJECTED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 81,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "jack",
+        "score": 53,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 47,
+    "state": "COMPLETED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: updateAllRequests and setRequestsScores updateAllRequests should update all requests for cross-check session 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 54,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "macKlein",
+        "score": 51,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 53,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 57,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 48,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 53,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "rediska",
+        "score": 89,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 89,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 80,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "john",
+        "score": 88,
+        "state": "DISPUTED",
+      },
+    ],
+    "reviewsAmount": 1,
+    "score": 80,
+    "state": "PUBLISHED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 81,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "jack",
+        "score": 53,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 67,
+    "state": "PUBLISHED",
+  },
+]
+`;
+
+exports[`Cross-check-session utils: updateRequest: should update request data 1`] = `
+Object {
+  "author": "john",
+  "id": "rev-req-2",
+  "reviewerOf": Array [
+    Object {
+      "author": "jack",
+      "score": 54,
+      "state": "ACCEPTED",
+    },
+    Object {
+      "author": "macKlein",
+      "score": 51,
+      "state": "ACCEPTED",
+    },
+  ],
+  "reviewsAmount": 0,
+  "score": 53,
+  "state": "PUBLISHED",
+}
+`;
+
+exports[`Cross-check-session utils: updateRequest: updateReviewers should update reviewers data of request 1`] = `
+Array [
+  Object {
+    "author": "jack",
+    "score": 54,
+    "state": "ACCEPTED",
+  },
+  Object {
+    "author": "macKlein",
+    "score": 51,
+    "state": "ACCEPTED",
+  },
+]
+`;
+
+exports[`completeCrossCheck operation session should have requests with scores 1`] = `
+Array [
+  Object {
+    "author": "john",
+    "id": "rev-req-2",
+    "reviewerOf": Array [
+      Object {
+        "author": "jack",
+        "score": 54,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "macKlein",
+        "score": 51,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 37,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "jack",
+    "id": "rev-req-1",
+    "reviewerOf": Array [
+      Object {
+        "author": "macKlein",
+        "score": 57,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "boris-britva",
+        "score": 48,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 37,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "macKlein",
+    "id": "rev-req-4",
+    "reviewerOf": Array [
+      Object {
+        "author": "boris-britva",
+        "score": 0,
+        "state": null,
+      },
+      Object {
+        "author": "rediska",
+        "score": 89,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 62,
+    "state": "COMPLETED",
+  },
+  Object {
+    "author": "boris-britva",
+    "id": "rev-req-3",
+    "reviewerOf": Array [
+      Object {
+        "author": "rediska",
+        "score": 80,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "john",
+        "score": 88,
+        "state": "DISPUTED",
+      },
+    ],
+    "reviewsAmount": 1,
+    "score": 56,
+    "state": "REJECTED",
+  },
+  Object {
+    "author": "rediska",
+    "id": "rev-req-5",
+    "reviewerOf": Array [
+      Object {
+        "author": "john",
+        "score": 81,
+        "state": "ACCEPTED",
+      },
+      Object {
+        "author": "jack",
+        "score": 53,
+        "state": "ACCEPTED",
+      },
+    ],
+    "reviewsAmount": 2,
+    "score": 47,
+    "state": "COMPLETED",
+  },
+]
+`;
